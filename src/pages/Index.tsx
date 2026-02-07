@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star, Search, Calendar, BookOpen, Sparkles } from "lucide-react";
+import { Star, Search, Calendar, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import AstrologerCard from "@/components/AstrologerCard";
 import { astrologers } from "@/data/astrologers";
 import heroBg from "@/assets/hero-bg.jpg";
 import { motion } from "framer-motion";
+import tarotCard from "@/assets/tarot-card.jpg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -128,25 +129,54 @@ const Index = () => (
       </motion.div>
     </section>
 
-    {/* Coming Soon */}
-    <section className="bg-accent py-16 text-center">
-      <div className="container">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          transition={{ duration: 0.5 }}
-        >
-          <Sparkles className="h-8 w-8 text-gold mx-auto mb-4" />
-          <h2 className="font-heading text-2xl font-bold text-accent-foreground mb-2">
-            Coming Soon
-          </h2>
-          <p className="text-accent-foreground/80 text-lg">
-            Tarot Card Reading Training — Stay Tuned!
-          </p>
-        </motion.div>
-      </div>
+    {/* Tarot Training */}
+    <section className="container py-20">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeUp}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="font-heading text-3xl font-bold text-center mb-12">
+          Tarot Card Reading <span className="text-primary">Training</span>
+        </h2>
+        <div className="mx-auto max-w-3xl rounded-2xl border bg-card p-8 md:p-10 shadow-sm opacity-90">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            {/* Tarot illustration */}
+            <div className="relative flex-shrink-0">
+              <img
+                src={tarotCard}
+                alt="Tarot card illustration"
+                className="h-56 w-44 rounded-xl object-cover shadow-md"
+              />
+              {/* Coming Soon badge */}
+              <div className="absolute -top-3 -right-3 rounded-full bg-gold px-3 py-1 text-xs font-bold text-gold-foreground shadow-md uppercase tracking-wider">
+                Coming Soon
+              </div>
+            </div>
+            {/* Content */}
+            <div className="text-center md:text-left">
+              <div className="inline-flex items-center gap-2 rounded-full border border-gold bg-gold/10 px-3 py-1 text-xs font-semibold text-gold mb-4 uppercase tracking-wider">
+                <GraduationCap className="h-3.5 w-3.5" /> Future Program
+              </div>
+              <h3 className="font-heading text-xl font-bold mb-3">
+                Learn Professional Tarot Reading
+              </h3>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                Professional tarot card reading training program will be available soon. Master the art of tarot interpretation with guidance from experienced practitioners — from card meanings to intuitive reading techniques.
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                {["Card Meanings", "Spreads & Layouts", "Intuitive Reading", "Practice Sessions"].map((tag) => (
+                  <span key={tag} className="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </section>
   </div>
 );
