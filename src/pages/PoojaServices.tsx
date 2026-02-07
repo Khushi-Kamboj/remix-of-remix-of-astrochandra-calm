@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, CheckCircle } from "lucide-react";
+import { Star, CheckCircle, Clock, Globe, Calendar } from "lucide-react";
 import { toast } from "sonner";
+import { priests } from "@/data/priests";
 
 const PoojaServices = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -45,6 +46,41 @@ const PoojaServices = () => {
             <p className="text-sm text-muted-foreground">{item.desc}</p>
           </div>
         ))}
+      </div>
+
+      {/* Priest Profiles */}
+      <div className="mb-16 max-w-4xl mx-auto">
+        <h2 className="font-heading text-2xl font-bold text-center mb-8">
+          Our Trusted <span className="text-primary">Priests</span>
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {priests.map((priest) => (
+            <div key={priest.name} className="group rounded-xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
+              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted mx-auto">
+                <Star className="h-8 w-8 text-gold" />
+              </div>
+              <h3 className="font-heading text-lg font-semibold text-center">{priest.name}</h3>
+              <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <p className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  {priest.experience}
+                </p>
+                <p className="flex items-center gap-2">
+                  <Star className="h-4 w-4 text-gold" />
+                  {priest.specialization}
+                </p>
+                <p className="flex items-center gap-2">
+                  <Globe className="h-4 w-4 text-primary" />
+                  {priest.languages}
+                </p>
+                <p className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-gold" />
+                  {priest.availability}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Form */}
