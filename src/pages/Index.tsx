@@ -15,36 +15,37 @@ const fadeUp = {
 const Index = () => (
   <div>
     {/* Hero */}
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden min-h-[85vh] flex items-center">
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-20"
+        className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
-      <div className="relative container py-24 md:py-32 text-center">
+      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background" />
+      <div className="relative container py-28 md:py-36 text-center">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={fadeUp}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-gold bg-card px-4 py-1.5 text-sm text-gold mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-gold/60 bg-background/60 backdrop-blur-sm px-4 py-1.5 text-sm text-gold mb-6 shadow-sm">
             <Sparkles className="h-4 w-4" /> Trusted by 1000+ families
           </div>
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 drop-shadow-md text-foreground">
             Astrology Guidance<br />
-            <span className="text-primary">You Can Trust</span>
+            <span className="text-primary drop-shadow-sm">You Can Trust</span>
           </h1>
           <p className="mx-auto max-w-xl text-lg text-muted-foreground mb-8">
             From prediction to solution — consultation and pooja support in one place.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link to="/book">
-              <Button size="lg" className="text-base px-8">
+              <Button size="lg" className="text-base px-8 shadow-lg">
                 Book Consultation
               </Button>
             </Link>
             <Link to="/astrologers">
-              <Button size="lg" variant="outline" className="text-base px-8">
+              <Button size="lg" variant="outline" className="text-base px-8 bg-background/60 backdrop-blur-sm shadow-sm">
                 Meet Astrologers
               </Button>
             </Link>
