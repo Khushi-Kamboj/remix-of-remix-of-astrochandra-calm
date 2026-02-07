@@ -1,0 +1,50 @@
+import { Star, Clock, Globe, Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+
+interface AstrologerCardProps {
+  name: string;
+  experience: string;
+  specialization: string;
+  languages: string;
+  availability: string;
+  image?: string;
+}
+
+const AstrologerCard = ({
+  name,
+  experience,
+  specialization,
+  languages,
+  availability,
+}: AstrologerCardProps) => (
+  <div className="group rounded-xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
+    <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted mx-auto">
+      <Star className="h-8 w-8 text-gold" />
+    </div>
+    <h3 className="font-heading text-lg font-semibold text-center">{name}</h3>
+    <div className="mt-3 space-y-2 text-sm text-muted-foreground">
+      <p className="flex items-center gap-2">
+        <Clock className="h-4 w-4 text-primary" />
+        {experience}
+      </p>
+      <p className="flex items-center gap-2">
+        <Star className="h-4 w-4 text-gold" />
+        {specialization}
+      </p>
+      <p className="flex items-center gap-2">
+        <Globe className="h-4 w-4 text-primary" />
+        {languages}
+      </p>
+      <p className="flex items-center gap-2">
+        <Calendar className="h-4 w-4 text-gold" />
+        {availability}
+      </p>
+    </div>
+    <Link to="/book" className="block mt-4">
+      <Button className="w-full" size="sm">Book Consultation</Button>
+    </Link>
+  </div>
+);
+
+export default AstrologerCard;
