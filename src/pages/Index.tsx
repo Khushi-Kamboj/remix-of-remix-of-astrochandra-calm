@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Star, Search, Calendar, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import AstrologerCard from "@/components/AstrologerCard";
 import { astrologers } from "@/data/astrologers";
-// hero uses inline gradient — no background image needed
 import { motion } from "framer-motion";
 import tarotCard from "@/assets/tarot-card.jpg";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -15,41 +15,55 @@ const fadeUp = {
 const Index = () => (
   <div>
     {/* Hero */}
-    <section className="relative overflow-hidden min-h-[85vh] flex items-center">
+    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+      {/* Background image */}
       <div
-        className="absolute inset-0"
-        style={{
-          background: "radial-gradient(ellipse at 20% 50%, #EC2227 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, #f5c518 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, #EC2227 0%, transparent 60%), linear-gradient(135deg, #EC2227 0%, #b81c20 30%, #f5c518 70%, #EC2227 100%)",
-        }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroBg})` }}
       />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_hsl(var(--background)/0.3)_100%)]" />
+      {/* Soft dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/50" />
+      {/* Bottom fade into page background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
-      <div className="relative container py-28 md:py-36 text-center">
+
+      <div className="relative container py-32 md:py-40">
         <motion.div
+          className="max-w-2xl mx-auto text-center md:text-left md:mx-0"
           initial="hidden"
           animate="visible"
           variants={fadeUp}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-gold/60 bg-background/60 backdrop-blur-sm px-4 py-1.5 text-sm text-gold mb-6 shadow-sm">
-            <Sparkles className="h-4 w-4" /> Trusted by 1000+ families
+          {/* Trust badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-white/10 backdrop-blur-md px-4 py-1.5 text-sm text-[#D4AF37] mb-8 tracking-wide">
+            <Sparkles className="h-4 w-4" /> Trusted Astrology Guidance Platform
           </div>
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 drop-shadow-md text-foreground">
+
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
             Astrology Guidance<br />
-            <span className="text-primary drop-shadow-sm">You Can Trust</span>
+            <span className="text-[#D4AF37]">You Can Trust</span>
           </h1>
-          <p className="mx-auto max-w-xl text-lg text-muted-foreground mb-8">
-            From prediction to solution — consultation and pooja support in one place.
+
+          <p className="max-w-xl text-lg text-white/75 mb-10 leading-relaxed">
+            Consult verified astrologers and receive remedy guidance, including pooja support when needed.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+
+          <div className="flex flex-col sm:flex-row items-center md:items-start gap-4">
             <Link to="/book">
-              <Button size="lg" className="text-base px-8 shadow-lg">
+              <Button
+                size="lg"
+                className="text-base px-8 shadow-lg bg-[#C62828] hover:bg-[#B71C1C] text-white border-0"
+              >
                 Book Consultation
               </Button>
             </Link>
             <Link to="/astrologers">
-              <Button size="lg" variant="outline" className="text-base px-8 bg-background/60 backdrop-blur-sm shadow-sm">
-                Meet Astrologers
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-base px-8 border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 bg-white/5 backdrop-blur-sm"
+              >
+                View Astrologers
               </Button>
             </Link>
           </div>
