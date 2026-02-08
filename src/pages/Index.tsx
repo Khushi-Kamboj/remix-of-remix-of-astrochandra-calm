@@ -12,6 +12,16 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
+// Generate random twinkling stars
+const stars = Array.from({ length: 40 }, (_, i) => ({
+  id: i,
+  top: `${Math.random() * 100}%`,
+  left: `${Math.random() * 100}%`,
+  size: Math.random() * 3 + 1,
+  delay: Math.random() * 4,
+  duration: Math.random() * 2 + 2,
+}));
+
 const Index = () => (
   <div>
     {/* Hero */}
@@ -21,14 +31,38 @@ const Index = () => (
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
-      {/* Soft dark overlay for readability */}
+      {/* Soft dark overlay */}
       <div className="absolute inset-0 bg-black/50" />
-      {/* Bottom fade into page background */}
+
+      {/* Twinkling stars */}
+      <div className="absolute inset-0 pointer-events-none">
+        {stars.map((star) => (
+          <motion.div
+            key={star.id}
+            className="absolute rounded-full bg-white"
+            style={{
+              top: star.top,
+              left: star.left,
+              width: star.size,
+              height: star.size,
+            }}
+            animate={{ opacity: [0.2, 1, 0.2] }}
+            transition={{
+              duration: star.duration,
+              repeat: Infinity,
+              delay: star.delay,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Bottom fade */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
 
       <div className="relative container py-32 md:py-40">
         <motion.div
-          className="max-w-2xl mx-auto text-center md:text-left md:mx-0"
+          className="max-w-2xl mx-auto text-center"
           initial="hidden"
           animate="visible"
           variants={fadeUp}
@@ -44,11 +78,11 @@ const Index = () => (
             <span className="text-[#D4AF37]">You Can Trust</span>
           </h1>
 
-          <p className="max-w-xl text-lg text-white/75 mb-10 leading-relaxed">
+          <p className="max-w-xl mx-auto text-lg text-white/75 mb-10 leading-relaxed">
             Consult verified astrologers and receive remedy guidance, including pooja support when needed.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center md:items-start gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/book">
               <Button
                 size="lg"
