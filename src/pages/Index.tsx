@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Star, Search, Calendar, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import AstrologerCard from "@/components/AstrologerCard";
 import { astrologers } from "@/data/astrologers";
-import heroBg from "@/assets/hero-bg.jpg";
+// hero uses inline gradient — no background image needed
 import { motion } from "framer-motion";
 import tarotCard from "@/assets/tarot-card.jpg";
 
@@ -17,10 +17,13 @@ const Index = () => (
     {/* Hero */}
     <section className="relative overflow-hidden min-h-[85vh] flex items-center">
       <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroBg})` }}
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at 20% 50%, #EC2227 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, #f5c518 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, #EC2227 0%, transparent 60%), linear-gradient(135deg, #EC2227 0%, #b81c20 30%, #f5c518 70%, #EC2227 100%)",
+        }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_hsl(var(--background)/0.3)_100%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
       <div className="relative container py-28 md:py-36 text-center">
         <motion.div
           initial="hidden"
