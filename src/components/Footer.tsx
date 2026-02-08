@@ -1,5 +1,6 @@
-import { Star, Mail, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "@/assets/logo.png";
 
 const Footer = () => (
   <footer className="border-t bg-card">
@@ -7,9 +8,7 @@ const Footer = () => (
       <div className="grid gap-8 md:grid-cols-3">
         <div>
           <Link to="/" className="flex items-center gap-2 mb-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-              <Star className="h-4 w-4 text-primary-foreground" />
-            </div>
+            <img src={logo} alt="AstroChandra" className="h-10 w-10 object-contain" />
             <span className="font-heading text-lg font-bold">
               Astro<span className="text-primary">Chandra</span>
             </span>
