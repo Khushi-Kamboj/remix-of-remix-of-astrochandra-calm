@@ -47,6 +47,7 @@ const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"))
 const bookingSchema = z
   .object({
     name: z.string().trim().min(1, "Name is required").max(100),
+    email: z.string().trim().email("Enter a valid email").max(255).optional().or(z.literal("")),
     phone: z.string().regex(/^\d{10}$/, "Phone must be exactly 10 digits"),
     problemCategory: z.string().min(1, "Select a problem category"),
     dependentCategory: z.string().optional(),
@@ -86,6 +87,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       name: "",
+      email: "",
       phone: "",
       problemCategory: "",
       dependentCategory: "",
@@ -118,6 +120,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       timestamp: new Date().toISOString(),
       serviceType,
       name: data.name,
+      email: data.email || "",
       phone: data.phone,
       problemCategory: data.problemCategory,
       dependentCategory: isOther ? (data.otherCategory || "") : (data.dependentCategory || ""),
@@ -189,6 +192,23 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="your@email.com" type="email" maxLength={255} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Phone */}
+        <div className="grid gap-5 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="phone"
