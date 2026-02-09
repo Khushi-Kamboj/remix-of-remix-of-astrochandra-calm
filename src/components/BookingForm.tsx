@@ -37,24 +37,38 @@ import {
   indianStates,
   preferredTimeSlots,
   poojaTypes,
-  ampmOptions,
 } from "@/data/booking-constants";
 
 export type ServiceType = "consultation" | "pooja";
 
-const bookingSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
-  phone: z.string().regex(/^\d{10}$/, "Phone must be exactly 10 digits"),
-  problemCategory: z.string().min(1, "Select a problem category"),
-  dependentCategory: z.string().min(1, "Select a sub-category"),
-  dob: z.date({ required_error: "Date of birth is required" }),
-  birthTime: z.string().min(1, "Birth time is required"),
-  ampm: z.string().min(1, "Select AM/PM"),
-  birthState: z.string().min(1, "Select your birth state"),
-  preferredSlot: z.string().min(1, "Select a time slot"),
-  description: z.string().max(1000).optional(),
-  poojaType: z.string().optional(),
-});
+const hours = Array.from({ length: 12 }, (_, i) => String(i + 1));
+const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"));
+
+const bookingSchema = z
+  .object({
+    name: z.string().trim().min(1, "Name is required").max(100),
+    phone: z.string().regex(/^\d{10}$/, "Phone must be exactly 10 digits"),
+    problemCategory: z.string().min(1, "Select a problem category"),
+    dependentCategory: z.string().optional(),
+    otherCategory: z.string().max(200).optional(),
+    dob: z.date({ required_error: "Date of birth is required" }),
+    birthHour: z.string().min(1, "Select hour"),
+    birthMinute: z.string().min(1, "Select minute"),
+    birthAmpm: z.string().min(1, "Select AM/PM"),
+    birthState: z.string().min(1, "Select your birth state"),
+    preferredSlot: z.string().min(1, "Select a time slot"),
+    description: z.string().max(1000).optional(),
+    poojaType: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.problemCategory !== "Other" && !data.dependentCategory) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Select a sub-category",
+        path: ["dependentCategory"],
+      });
+    }
+  });
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
 
@@ -75,8 +89,10 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       phone: "",
       problemCategory: "",
       dependentCategory: "",
-      birthTime: "",
-      ampm: "",
+      otherCategory: "",
+      birthHour: "",
+      birthMinute: "",
+      birthAmpm: "",
       birthState: "",
       preferredSlot: "",
       description: "",
@@ -85,27 +101,29 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
   });
 
   const watchedCategory = form.watch("problemCategory");
+  const isOther = watchedCategory === "Other";
   const dependentOptions = dependentCategories[watchedCategory] || [];
 
-  // Reset dependent category when problem category changes
   const handleCategoryChange = (value: string) => {
     form.setValue("problemCategory", value);
     form.setValue("dependentCategory", "");
+    form.setValue("otherCategory", "");
   };
 
   const onSubmit = async (data: BookingFormValues) => {
     setLoading(true);
 
+    const birthTime = `${data.birthHour}:${data.birthMinute}`;
     const payload = {
       timestamp: new Date().toISOString(),
       serviceType,
       name: data.name,
       phone: data.phone,
       problemCategory: data.problemCategory,
-      dependentCategory: data.dependentCategory,
+      dependentCategory: isOther ? (data.otherCategory || "") : (data.dependentCategory || ""),
       dob: format(data.dob, "yyyy-MM-dd"),
-      birthTime: data.birthTime,
-      ampm: data.ampm,
+      birthTime,
+      ampm: data.birthAmpm,
       birthState: data.birthState,
       preferredSlot: data.preferredSlot,
       description: data.description || "",
@@ -121,7 +139,6 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
           body: JSON.stringify(payload),
         });
       } else {
-        // Simulate submission when no URL configured
         await new Promise((r) => setTimeout(r, 1200));
         console.log("Form data (no Google Sheets URL configured):", payload);
       }
@@ -144,11 +161,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
         <p className="text-muted-foreground">
           Your booking request has been received. Our team will contact you shortly. Thank you for trusting AstroChandra.
         </p>
-        <Button
-          className="mt-6"
-          variant="outline"
-          onClick={() => setSubmitted(false)}
-        >
+        <Button className="mt-6" variant="outline" onClick={() => setSubmitted(false)}>
           Book Another
         </Button>
       </div>
@@ -200,7 +213,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
           />
         </div>
 
-        {/* Problem Category & Dependent */}
+        {/* Problem Category & Dependent / Other */}
         <div className="grid gap-5 sm:grid-cols-2">
           <FormField
             control={form.control}
@@ -208,10 +221,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Problem Category *</FormLabel>
-                <Select
-                  onValueChange={handleCategoryChange}
-                  value={field.value}
-                >
+                <Select onValueChange={handleCategoryChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />
@@ -227,36 +237,53 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="dependentCategory"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sub-Category *</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  disabled={dependentOptions.length === 0}
-                >
+
+          {isOther ? (
+            <FormField
+              control={form.control}
+              name="otherCategory"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Specify (optional)</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder={dependentOptions.length === 0 ? "Select category first" : "Select sub-category"} />
-                    </SelectTrigger>
+                    <Input placeholder="Describe your concern" maxLength={200} {...field} />
                   </FormControl>
-                  <SelectContent>
-                    {dependentOptions.map((opt) => (
-                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <FormField
+              control={form.control}
+              name="dependentCategory"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sub-Category *</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={dependentOptions.length === 0}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={dependentOptions.length === 0 ? "Select category first" : "Select sub-category"} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {dependentOptions.map((opt) => (
+                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
 
-        {/* DOB, Time, AM/PM */}
-        <div className="grid gap-5 sm:grid-cols-3">
+        {/* DOB & Time of Birth (Hour / Minute / AM-PM) */}
+        <div className="grid gap-5 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="dob"
@@ -283,9 +310,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
+                      disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                       initialFocus
                       className={cn("p-3 pointer-events-auto")}
                     />
@@ -295,41 +320,74 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="birthTime"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Time of Birth *</FormLabel>
-                <FormControl>
-                  <Input type="time" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="ampm"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>AM/PM *</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {ampmOptions.map((opt) => (
-                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
+          <div className="flex flex-col">
+            <FormLabel className="mb-2">Time of Birth *</FormLabel>
+            <div className="grid grid-cols-3 gap-2">
+              <FormField
+                control={form.control}
+                name="birthHour"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Hr" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {hours.map((h) => (
+                          <SelectItem key={h} value={h}>{h}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="birthMinute"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Min" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {minutes.map((m) => (
+                          <SelectItem key={m} value={m}>{m}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="birthAmpm"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="AM/PM" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="AM">AM</SelectItem>
+                        <SelectItem value="PM">PM</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Birth State & Preferred Slot */}
