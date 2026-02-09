@@ -1,25 +1,8 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Star, CheckCircle, Clock, Globe, Calendar } from "lucide-react";
-import { toast } from "sonner";
+import { Star, Clock, Globe, Calendar } from "lucide-react";
 import { priests } from "@/data/priests";
+import BookingForm from "@/components/BookingForm";
 
 const PoojaServices = () => {
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    setSubmitted(true);
-    toast.success("Pooja request submitted!");
-  };
-
   return (
     <div className="container py-16">
       <div className="text-center mb-12">
@@ -84,45 +67,11 @@ const PoojaServices = () => {
       </div>
 
       {/* Form */}
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-2xl">
         <h2 className="font-heading text-2xl font-bold text-center mb-6">
           Request a Pooja
         </h2>
-
-        {submitted ? (
-          <div className="rounded-2xl border bg-card p-10 text-center shadow-sm">
-            <CheckCircle className="mx-auto h-16 w-16 text-gold mb-4" />
-            <h3 className="font-heading text-xl font-bold mb-2">Request Received!</h3>
-            <p className="text-muted-foreground">
-              We will review your request and get in touch shortly. Thank you for trusting AstroChandra.
-            </p>
-          </div>
-        ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-2xl border bg-card p-8 shadow-sm space-y-5"
-          >
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name *</Label>
-              <Input id="name" required placeholder="Your name" maxLength={100} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="mobile">Mobile Number *</Label>
-              <Input id="mobile" required placeholder="+91 98765 43210" type="tel" maxLength={15} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="problem">Problem / Reason *</Label>
-              <Textarea id="problem" required placeholder="Describe your concern..." rows={3} maxLength={500} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="poojaType">Pooja Type (optional)</Label>
-              <Input id="poojaType" placeholder="e.g. Navagraha Shanti, Rudra Abhishek" maxLength={200} />
-            </div>
-            <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? "Submitting..." : "Submit Request"}
-            </Button>
-          </form>
-        )}
+        <BookingForm serviceType="pooja" />
       </div>
     </div>
   );
