@@ -47,7 +47,7 @@ const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, "0"))
 const bookingSchema = z
   .object({
     name: z.string().trim().min(1, "Name is required").max(100),
-    email: z.string().trim().email("Enter a valid email").max(255).optional().or(z.literal("")),
+    email: z.string().trim().email("Enter a valid email").max(255),
     phone: z.string().regex(/^\d{10}$/, "Phone must be exactly 10 digits"),
     problemCategory: z.string().min(1, "Select a problem category"),
     dependentCategory: z.string().optional(),
@@ -197,7 +197,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Email *</FormLabel>
                 <FormControl>
                   <Input placeholder="your@email.com" type="email" maxLength={255} {...field} />
                 </FormControl>
