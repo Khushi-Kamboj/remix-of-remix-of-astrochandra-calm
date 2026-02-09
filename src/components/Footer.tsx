@@ -7,11 +7,12 @@ const Footer = () => (
     <div className="container py-12">
       <div className="grid gap-8 md:grid-cols-3">
         <div>
-          <Link to="/" className="flex items-center gap-2 mb-3">
-            <img src={logo} alt="AstroChandra" className="h-10 w-10 object-contain" />
-            <span className="font-heading text-lg font-bold">
-              Astro<span className="text-primary">Chandra</span>
-            </span>
+          <Link to="/" className="flex items-center gap-3">
+            <img
+              src={logo}
+              alt="AstroChandra"
+              className="h-10 w-auto object-contain"
+            />
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Trusted astrology guidance with real remedies. From consultation to pooja — we are here to help you.

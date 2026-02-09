@@ -74,13 +74,15 @@ const Index = () => (
           </div>
 
           <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
-            Astrology Guidance<br />
-            <span className="text-[#D4AF37]">You Can Trust</span>
+            Clarity when life feels uncertain.
+            <br />
+            <span className="text-[#D4AF37]">Guidance when decisions matter.</span>
           </h1>
 
-          <p className="max-w-xl mx-auto text-lg text-white/75 mb-10 leading-relaxed">
-            Consult verified astrologers and receive remedy guidance, including pooja support when needed.
+          <p className="max-w-xl mx-auto text-lg text-white/80 mb-10 leading-relaxed">
+            Real astrologers. Real conversations. Real direction.
           </p>
+
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/book">
@@ -91,13 +93,13 @@ const Index = () => (
                 Book Consultation
               </Button>
             </Link>
-            <Link to="/astrologers">
+            <Link to="/pooja">
               <Button
                 size="lg"
                 variant="outline"
                 className="text-base px-8 border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 bg-white/5 backdrop-blur-sm"
               >
-                View Astrologers
+                Book Pooja
               </Button>
             </Link>
           </div>

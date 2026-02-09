@@ -18,11 +18,12 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="AstroChandra" className="h-10 w-10 object-contain" />
-          <span className="hidden sm:inline font-heading text-xl font-bold text-foreground">
-            Astro<span className="text-primary">Chandra</span>
-          </span>
+        <Link to="/" className="flex items-center gap-3">
+          <img
+            src={logo}
+            alt="AstroChandra"
+            className="h-12 w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop */}

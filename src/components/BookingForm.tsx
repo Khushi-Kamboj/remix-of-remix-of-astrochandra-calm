@@ -73,7 +73,7 @@ const bookingSchema = z
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
 
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyFZy_-zn6rf2kUlS3LccxSqr1Vn-N-8h1uMR3_0PSX5oCQokhKsU0zsG4Uubew-6rN/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzx_MHutlazRc5Mmpa-itE3iwEiJJNwPLevn5KuM-aak_L_x4Lo78jJhkIU6CKP7Zw3/exec";
 
 interface BookingFormProps {
   serviceType: ServiceType;
@@ -115,7 +115,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
   const onSubmit = async (data: BookingFormValues) => {
     setLoading(true);
 
-    const birthTime = `${data.birthHour}:${data.birthMinute}`;
+    const birthTime = `${data.birthHour}:${data.birthMinute} ${data.birthAmpm}`;
     const payload = {
       timestamp: new Date().toISOString(),
       serviceType,
@@ -126,7 +126,6 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       dependentCategory: isOther ? (data.otherCategory || "") : (data.dependentCategory || ""),
       dob: format(data.dob, "yyyy-MM-dd"),
       birthTime,
-      ampm: data.birthAmpm,
       birthState: data.birthState,
       preferredSlot: data.preferredSlot,
       description: data.description || "",
@@ -137,7 +136,6 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       if (GOOGLE_SHEETS_URL) {
         await fetch(GOOGLE_SHEETS_URL, {
           method: "POST",
-          mode: "no-cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
