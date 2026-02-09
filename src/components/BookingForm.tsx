@@ -72,7 +72,7 @@ const bookingSchema = z
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
 
-const GOOGLE_SHEETS_URL = ""; // Add your Google Apps Script Web App URL here
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyFZy_-zn6rf2kUlS3LccxSqr1Vn-N-8h1uMR3_0PSX5oCQokhKsU0zsG4Uubew-6rN/exec";
 
 interface BookingFormProps {
   serviceType: ServiceType;
