@@ -132,13 +132,46 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       poojaType: data.poojaType || "",
     };
 
+    console.log("Submitting payload:", payload);
+
     try {
       if (GOOGLE_SHEETS_URL) {
-        await fetch(GOOGLE_SHEETS_URL, {
+        const response = await fetch(GOOGLE_SHEETS_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload),
         });
+
+        console.log("Response status:", response.status);
+        console.log("Response ok:", response.ok);
+
+        const responseText = await response.text();
+        console.log("Response body:", responseText);
+
+        let result;
+        try {
+          result = JSON.parse(responseText);
+          console.log("Parsed response:", result);
+        } catch {
+          console.warn("Response is not valid JSON:", responseText);
+        }
+
+        if (!response.ok) {
+          const errorMsg = result?.error || responseText || `HTTP ${response.status}`;
+          console.error("Google Sheets submission failed:", errorMsg);
+          toast.error(`Submission failed: ${errorMsg}`);
+          setLoading(false);
+          return;
+        }
+
+        if (result?.error) {
+          console.error("Apps Script returned error:", result.error);
+          toast.error(`Apps Script error: ${result.error}`);
+          setLoading(false);
+          return;
+        }
+
+        console.log("Google Sheets submission successful");
       } else {
         await new Promise((r) => setTimeout(r, 1200));
         console.log("Form data (no Google Sheets URL configured):", payload);
@@ -147,8 +180,10 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       setSubmitted(true);
       form.reset();
       toast.success("Your booking request has been received.");
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      console.error("Fetch error:", message, error);
+      toast.error(`Something went wrong: ${message}`);
     } finally {
       setLoading(false);
     }
