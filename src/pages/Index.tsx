@@ -73,7 +73,7 @@ const Index = () => (
             <Sparkles className="h-4 w-4" /> Trusted Astrology Guidance Platform
           </div>
 
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl leading-tight mb-6 text-white">
             Clarity when life feels uncertain.
             <br />
             <span className="text-[#D4AF37]">Guidance when decisions matter.</span>

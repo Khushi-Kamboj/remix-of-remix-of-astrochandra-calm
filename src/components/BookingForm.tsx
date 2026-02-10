@@ -73,7 +73,7 @@ const bookingSchema = z
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
 
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzx_MHutlazRc5Mmpa-itE3iwEiJJNwPLevn5KuM-aak_L_x4Lo78jJhkIU6CKP7Zw3/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbz1xNriYP3vXeO-Yy0tuhjE51ejbDFrXjIBADUKqrn03P4TF28glwnYmWbG1N1YYZva/exec";
 
 interface BookingFormProps {
   serviceType: ServiceType;
