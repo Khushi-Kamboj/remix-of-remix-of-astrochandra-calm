@@ -28,19 +28,20 @@ const Navbar = () => {
 
         {/* Desktop */}
         <div className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-muted ${
-                location.pathname === link.path
-                  ? "text-primary"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-muted ${
+                  isActive ? "text-red-600" : "text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <Link to="/book">
             <Button size="sm" className="ml-2">Book Now</Button>
           </Link>
@@ -59,20 +60,21 @@ const Navbar = () => {
       {/* Mobile menu */}
       {open && (
         <div className="border-t bg-card px-4 pb-4 pt-2 md:hidden">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              onClick={() => setOpen(false)}
-              className={`block rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-muted ${
-                location.pathname === link.path
-                  ? "text-primary"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setOpen(false)}
+                className={`block rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-muted ${
+                  isActive ? "text-red-600" : "text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <Link to="/book" onClick={() => setOpen(false)}>
             <Button className="mt-2 w-full">Book Now</Button>
           </Link>

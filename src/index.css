@@ -6,13 +6,14 @@
 
 @layer base {
   :root {
-    --background: 30 33% 96%;
+    /* Slightly softened light theme (less pure white) */
+    --background: 30 25% 93%;
     --foreground: 0 0% 17%;
 
-    --card: 40 100% 98%;
+    --card: 40 70% 96%;
     --card-foreground: 0 0% 17%;
 
-    --popover: 40 100% 98%;
+    --popover: 40 70% 96%;
     --popover-foreground: 0 0% 17%;
 
     --primary: 0 68% 47%;
@@ -21,7 +22,7 @@
     --secondary: 43 56% 52%;
     --secondary-foreground: 0 0% 17%;
 
-    --muted: 30 20% 92%;
+    --muted: 30 15% 90%;
     --muted-foreground: 0 0% 40%;
 
     --accent: 268 28% 24%;
@@ -30,8 +31,8 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 30 20% 88%;
-    --input: 30 20% 88%;
+    --border: 30 15% 86%;
+    --input: 30 15% 86%;
     --ring: 0 68% 47%;
 
     --radius: 0.75rem;

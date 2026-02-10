@@ -141,7 +141,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
         // but the data still reaches the script.
         await fetch(GOOGLE_SHEETS_URL, {
           method: "POST",
-          mode: "no-cors",
+          // mode: "no-cors",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload),
         });

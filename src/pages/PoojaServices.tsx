@@ -7,8 +7,8 @@ const PoojaServices = () => {
   return (
     <div className="container py-16">
       <div className="text-center mb-12">
-        <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gold/10">
-          <img className="h-full w-full object-cover rounded-full" src={pooja} alt="Pooja Services" />
+        <div className="mx-auto mb-4 flex w-[45%] max-w-[260px] aspect-square items-center justify-center overflow-hidden rounded-lg bg-gold/10">
+          <img className="h-full w-full object-cover" src={pooja} alt="Pooja Services" />
         </div>
         <h1 className="font-heading text-3xl md:text-4xl font-bold mb-3">
           Pooja <span className="text-primary">Services</span>
