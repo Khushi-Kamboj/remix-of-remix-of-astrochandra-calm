@@ -132,13 +132,21 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       poojaType: data.poojaType || "",
     };
 
+    console.log("Submitting payload:", payload);
+
     try {
       if (GOOGLE_SHEETS_URL) {
+        // Using no-cors mode because Google Apps Script redirects
+        // don't include CORS headers. The response will be opaque,
+        // but the data still reaches the script.
         await fetch(GOOGLE_SHEETS_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload),
         });
+
+        console.log("Payload sent successfully (no-cors mode, response is opaque)");
       } else {
         await new Promise((r) => setTimeout(r, 1200));
         console.log("Form data (no Google Sheets URL configured):", payload);
@@ -147,8 +155,10 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       setSubmitted(true);
       form.reset();
       toast.success("Your booking request has been received.");
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      console.error("Fetch error:", message, error);
+      toast.error(`Something went wrong: ${message}`);
     } finally {
       setLoading(false);
     }

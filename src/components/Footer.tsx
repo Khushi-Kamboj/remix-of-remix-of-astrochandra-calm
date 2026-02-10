@@ -33,7 +33,7 @@ const Footer = () => (
           <h4 className="font-heading font-semibold mb-3">Contact Us</h4>
           <div className="flex flex-col gap-2 text-sm text-muted-foreground">
             <span className="flex items-center gap-2">
-              <Phone className="h-4 w-4 text-primary" /> +91 98765 43210
+              <Phone className="h-4 w-4 text-primary" /> +91 98765 xxxxx
             </span>
             <span className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-primary" /> contact@astrochandra.com
