@@ -136,42 +136,17 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
 
     try {
       if (GOOGLE_SHEETS_URL) {
-        const response = await fetch(GOOGLE_SHEETS_URL, {
+        // Using no-cors mode because Google Apps Script redirects
+        // don't include CORS headers. The response will be opaque,
+        // but the data still reaches the script.
+        await fetch(GOOGLE_SHEETS_URL, {
           method: "POST",
+          mode: "no-cors",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload),
         });
 
-        console.log("Response status:", response.status);
-        console.log("Response ok:", response.ok);
-
-        const responseText = await response.text();
-        console.log("Response body:", responseText);
-
-        let result;
-        try {
-          result = JSON.parse(responseText);
-          console.log("Parsed response:", result);
-        } catch {
-          console.warn("Response is not valid JSON:", responseText);
-        }
-
-        if (!response.ok) {
-          const errorMsg = result?.error || responseText || `HTTP ${response.status}`;
-          console.error("Google Sheets submission failed:", errorMsg);
-          toast.error(`Submission failed: ${errorMsg}`);
-          setLoading(false);
-          return;
-        }
-
-        if (result?.error) {
-          console.error("Apps Script returned error:", result.error);
-          toast.error(`Apps Script error: ${result.error}`);
-          setLoading(false);
-          return;
-        }
-
-        console.log("Google Sheets submission successful");
+        console.log("Payload sent successfully (no-cors mode, response is opaque)");
       } else {
         await new Promise((r) => setTimeout(r, 1200));
         console.log("Form data (no Google Sheets URL configured):", payload);
