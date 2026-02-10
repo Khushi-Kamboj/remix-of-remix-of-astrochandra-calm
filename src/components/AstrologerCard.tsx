@@ -8,7 +8,7 @@ interface AstrologerCardProps {
   specialization: string;
   languages: string;
   availability: string;
-  image?: string;
+  imageUrl?: string;
 }
 
 const AstrologerCard = ({
@@ -17,11 +17,22 @@ const AstrologerCard = ({
   specialization,
   languages,
   availability,
+  imageUrl,
 }: AstrologerCardProps) => (
   <div className="group rounded-xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
-    <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted mx-auto">
-      <Star className="h-8 w-8 text-gold" />
-    </div>
+    {imageUrl ? (
+      <div className="mb-4 mx-auto h-24 w-24 rounded-full overflow-hidden bg-muted">
+        <img
+          src={imageUrl}
+          alt={name}
+          className="h-full w-full object-cover"
+        />
+      </div>
+    ) : (
+      <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-muted mx-auto">
+        <Star className="h-8 w-8 text-gold" />
+      </div>
+    )}
     <h3 className="font-heading text-lg font-semibold text-center">{name}</h3>
     <div className="mt-3 space-y-2 text-sm text-muted-foreground">
       <p className="flex items-center gap-2">

@@ -1,13 +1,14 @@
 import { Star, Clock, Globe, Calendar } from "lucide-react";
 import { priests } from "@/data/priests";
 import BookingForm from "@/components/BookingForm";
+import pooja from "@/assets/pooja.jpeg";
 
 const PoojaServices = () => {
   return (
     <div className="container py-16">
       <div className="text-center mb-12">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gold/10">
-          <Star className="h-7 w-7 text-gold" />
+        <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gold/10">
+          <img className="h-full w-full object-cover rounded-full" src={pooja} alt="Pooja Services" />
         </div>
         <h1 className="font-heading text-3xl md:text-4xl font-bold mb-3">
           Pooja <span className="text-primary">Services</span>

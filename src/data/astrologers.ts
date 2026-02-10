@@ -1,10 +1,13 @@
+import anu from "@/assets/anu.jpeg";
+
 export const astrologers = [
   {
-    name: "Pandit Ramesh Sharma",
-    experience: "18 years experience",
-    specialization: "Vedic Astrology, Kundli Matching",
-    languages: "Hindi, English",
+    name: "Anu Singh",
+    experience: "6 years experience",
+    specialization: "Vedic Astrology, Tarot Card Reading",
+    languages: "Hindi, English, Bhojpuri",
     availability: "Mon–Sat, 10 AM – 7 PM",
+    imageUrl: anu,
   },
   {
     name: "Jyotishi Meena Devi",
@@ -12,6 +15,7 @@ export const astrologers = [
     specialization: "Career & Finance Guidance",
     languages: "Hindi, Marathi",
     availability: "Mon–Fri, 11 AM – 6 PM",
+    imageUrl: "",
   },
   {
     name: "Acharya Sunil Tripathi",
@@ -19,6 +23,7 @@ export const astrologers = [
     specialization: "Graha Dosha, Remedies",
     languages: "Hindi, English, Sanskrit",
     availability: "Tue–Sun, 10 AM – 5 PM",
+    imageUrl: "",
   },
   {
     name: "Dr. Kavita Joshi",
@@ -26,6 +31,7 @@ export const astrologers = [
     specialization: "Marriage & Relationship",
     languages: "Hindi, English, Gujarati",
     availability: "Mon–Sat, 12 PM – 8 PM",
+    imageUrl: "",
   },
   {
     name: "Pandit Arjun Mishra",
@@ -33,5 +39,6 @@ export const astrologers = [
     specialization: "Health & Vastu Shastra",
     languages: "Hindi, English",
     availability: "Wed–Mon, 9 AM – 6 PM",
+    imageUrl: "",
   },
 ];

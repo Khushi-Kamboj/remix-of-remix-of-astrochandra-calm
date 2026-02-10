@@ -5,7 +5,7 @@ import AstrologerCard from "@/components/AstrologerCard";
 import { astrologers } from "@/data/astrologers";
 import { motion } from "framer-motion";
 import tarotCard from "@/assets/tarot-card.jpg";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/bg_AstroChandra.jpeg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -25,7 +25,7 @@ const stars = Array.from({ length: 40 }, (_, i) => ({
 const Index = () => (
   <div>
     {/* Hero */}
-    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden min-h-[100vh] flex items-center">
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -60,7 +60,7 @@ const Index = () => (
       {/* Bottom fade */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
 
-      <div className="relative container py-32 md:py-40">
+      <div className="relative container py-30 md:py-38">
         <motion.div
           className="max-w-2xl mx-auto text-center"
           initial="hidden"
@@ -79,7 +79,7 @@ const Index = () => (
             <span className="text-[#D4AF37]">Guidance when decisions matter.</span>
           </h1>
 
-          <p className="max-w-xl mx-auto text-lg text-white/80 mb-10 leading-relaxed">
+          <p className="max-w-xl mx-auto text-lg text-white mb-10 leading-relaxed">
             Real astrologers. Real conversations. Real direction.
           </p>
 
@@ -97,7 +97,7 @@ const Index = () => (
               <Button
                 size="lg"
                 variant="outline"
-                className="text-base px-8 border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 bg-white/5 backdrop-blur-sm"
+                className="text-base px-8 bg-[#C62828] hover:bg-[#B71C1C] text-white backdrop-blur-sm"
               >
                 Book Pooja
               </Button>
@@ -147,7 +147,7 @@ const Index = () => (
         <p className="text-center text-muted-foreground mb-12 max-w-lg mx-auto">
           Experienced and trusted astrologers ready to guide you through life's challenges.
         </p>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {astrologers.map((a) => (
             <AstrologerCard key={a.name} {...a} />
           ))}

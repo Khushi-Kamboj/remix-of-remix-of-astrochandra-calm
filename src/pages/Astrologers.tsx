@@ -11,7 +11,7 @@ const Astrologers = () => (
         Each astrologer is verified for experience, accuracy, and commitment to helping you find real solutions.
       </p>
     </div>
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {astrologers.map((a) => (
         <AstrologerCard key={a.name} {...a} />
       ))}

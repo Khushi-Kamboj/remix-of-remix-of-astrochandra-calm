@@ -56,8 +56,13 @@ export const indianStates = [
 ] as const;
 
 export const preferredTimeSlots = [
-  "8:00 AM - 10:00 AM",
-  "10:00 AM - 12:00 PM",
+  "9:00 AM - 11:00 AM",
+  "11:00 AM - 1:00 PM",
+  "1:00 PM - 3:00 PM",
+  "3:00 PM - 5:00 PM",
+  "5:00 PM - 7:00 PM",
+  "7:00 PM - 9:00 PM",
+  "9:00 PM - 11:00 PM",
 ] as const;
 
 export const poojaTypes = [
