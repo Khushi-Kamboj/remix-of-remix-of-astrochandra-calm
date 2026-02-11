@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/bg_astrochandra.png";
+import heroBgMobile from "@/assets/bg_astrochandra_mobile.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -11,77 +12,88 @@ const fadeUp = {
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative h-[90vh] md:min-h-screen overflow-hidden">
       
-      {/* Background Image */}
+      {/* Desktop Background */}
       <div
-        className="absolute inset-0 bg-cover bg-no-repeat md:bg-center"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundPosition: "75% center", // keeps astrologers visible on mobile
-        }}
+        className="absolute inset-0 bg-cover bg-center hidden md:block"
+        style={{ backgroundImage: `url(${heroBg})` }}
+      />
+
+      {/* Mobile Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center md:hidden"
+        style={{ backgroundImage: `url(${heroBgMobile})` }}
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
 
       {/* Content */}
-      <div className="relative container min-h-screen flex items-center justify-center">
+        <div className="relative container h-full flex flex-col justify-between md:justify-center py-8 md:py-0 text-center">
+
+        {/* Badge — moves to top on mobile */}
+        <div className="md:hidden pt-4">
+        <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-[11px] text-[#E6D08A] tracking-wide font-medium">
+            <Sparkles className="h-3.5 w-3.5 text-[#D4AF37]" />
+            Trusted Astrology Guidance Platform
+        </div>
+        </div>
+
         <motion.div
-          className="max-w-2xl text-center md:-ml-20"
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-          transition={{ duration: 0.7 }}
+        className="max-w-xs sm:max-w-sm md:max-w-2xl mx-auto"
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        transition={{ duration: 0.7 }}
         >
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/25 px-4 py-1.5 text-xs text-[#E6D08A] mb-6 tracking-wide font-medium">
+        {/* Badge for desktop */}
+        <div className="hidden md:inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-xs text-[#E6D08A] mb-6 tracking-wide font-medium">
             <Sparkles className="h-4 w-4 text-[#D4AF37]" />
             Trusted Astrology Guidance Platform
-          </div>
+        </div>
 
-          {/* Heading */}
-          <h1
-            className="font-heading text-3xl md:text-5xl lg:text-6xl leading-tight mb-5"
-            style={{ textShadow: "0px 4px 18px rgba(0,0,0,0.45)" }}
-          >
-            <span className="text-white/80 font-light block">
-              Clarity when life feels uncertain.
+        {/* Heading */}
+        <h1 className="font-heading text-xl sm:text-2xl md:text-5xl lg:text-6xl leading-snug md:leading-tight mb-4">
+            <span className="text-white/85 block font-light">
+            Clarity when life feels uncertain.
             </span>
 
-            <span className="text-[#D4AF37] font-bold block text-[1.05em]">
-              Guidance when decisions matter.
+            <span className="text-[#D4AF37] font-bold block">
+            Guidance when decisions matter.
             </span>
-          </h1>
+        </h1>
 
-          {/* Subtitle */}
-          <p className="text-white/70 text-base md:text-lg mb-8 max-w-xl mx-auto">
+        {/* Subtitle */}
+        <p className="text-white/70 text-sm md:text-lg mb-6 max-w-md mx-auto">
             Real astrologers. Real conversations. Real direction.
-          </p>
+        </p>
 
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* Buttons — one row on mobile */}
+        <div className="flex flex-row gap-3 justify-center">
             <Link to="/book">
-              <Button
-                size="lg"
-                className="px-8 text-white rounded-xl shadow-lg"
+            <Button
+                size="sm"
+                className="px-5 py-2 text-sm text-white rounded-lg shadow-lg"
                 style={{ background: "#EC2227" }}
-              >
+            >
                 Book Consultation
-              </Button>
+            </Button>
             </Link>
 
             <Link to="/pooja">
-              <Button
-                size="lg"
-                className="px-8 rounded-xl border border-[#D4AF37] text-[#D4AF37] bg-black/30 hover:bg-black/50"
-              >
+            <Button
+                size="sm"
+                className="px-5 py-2 text-sm rounded-lg border border-[#D4AF37] text-[#D4AF37] bg-black/30"
+            >
                 Book Pooja
-              </Button>
+            </Button>
             </Link>
-          </div>
+        </div>
         </motion.div>
-      </div>
+
+        </div>
+        
     </section>
   );
 };
