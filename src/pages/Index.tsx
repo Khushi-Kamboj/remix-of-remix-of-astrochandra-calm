@@ -26,7 +26,7 @@ const stars = Array.from({ length: 40 }, (_, i) => ({
 const Index = () => (
   <div>
     {/* Hero */}
-    <section className="relative overflow-hidden min-h-[100vh] flex items-end pb-10 md:pb-14">
+    <section className="relative overflow-hidden min-h-[75vh] md:min-h-[100vh] flex items-end pb-6 md:pb-14">
       {/* Soft spiritual gradient background */}
       <div
         className="absolute inset-0"
@@ -57,7 +57,7 @@ const Index = () => (
       {/* Bottom fade to page background */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-background" />
 
-      <div className="relative container">
+      <div className="relative container py-8 md:py-0">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           initial="hidden"
