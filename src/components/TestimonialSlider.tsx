@@ -19,7 +19,7 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
       <div className="pointer-events-none absolute right-0 top-0 h-full w-16 md:w-32 bg-gradient-to-l from-background to-transparent z-10" />
 
       <div
-        className="flex gap-6 md:gap-8 animate-scroll hover:[animation-play-state:paused]"
+        className="flex w-max gap-6 md:gap-8 animate-scroll hover:[animation-play-state:paused]"
         style={{ animationDuration: `${speed}s` }}
       >
         {duplicated.map((item, index) => (
@@ -74,8 +74,6 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
                 )}
                 </div>
 
-
-
             {/* Divider */}
             <div className="h-px bg-border mb-5" />
 
@@ -90,15 +88,22 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
       {/* Scroll Animation */}
       <style>
         {`
-          @keyframes scroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
+            @keyframes scroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
           }
 
           .animate-scroll {
             animation: scroll linear infinite;
+            width: max-content;
           }
+
         `}
+
       </style>
     </section>
   );
