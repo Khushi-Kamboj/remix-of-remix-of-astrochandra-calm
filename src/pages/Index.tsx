@@ -26,7 +26,7 @@ const stars = Array.from({ length: 40 }, (_, i) => ({
 const Index = () => (
   <div>
     {/* Hero */}
-    <section className="relative overflow-hidden min-h-[100vh] flex items-end pb-12 md:pb-16">
+    <section className="relative overflow-hidden min-h-[100vh] flex items-end pb-10 md:pb-14">
       {/* Soft spiritual gradient background */}
       <div
         className="absolute inset-0"
