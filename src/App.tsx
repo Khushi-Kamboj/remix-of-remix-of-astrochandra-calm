@@ -9,9 +9,8 @@ import Index from "./pages/Index";
 import Astrologers from "./pages/Astrologers";
 import BookConsultation from "./pages/BookConsultation";
 import PoojaServices from "./pages/PoojaServices";
-import TrainingWorkshops from "./pages/TrainingWorkshops";
 import NotFound from "./pages/NotFound";
-
+import TrainingWorkshops from "./pages/TrainingWorkshops";
 const queryClient = new QueryClient();
 
 const App = () => (

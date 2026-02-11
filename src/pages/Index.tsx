@@ -1,16 +1,38 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star, Search, Calendar, BookOpen, Sparkles } from "lucide-react";
+import { Star, Search, Calendar, BookOpen, Sparkles, GraduationCap } from "lucide-react";
 import AstrologerCard from "@/components/AstrologerCard";
 import { astrologers } from "@/data/astrologers";
 import { motion } from "framer-motion";
-import heroBg from "@/assets/bg_AstroChandra.jpeg";
+import AboutSection from "@/components/AboutSection";
+import Hero from "@/components/Hero"
+import heroBg from "@/assets/bg_astrochandra.png";
 import poojaImg from "@/assets/pooja.jpeg";
+import Astrologers from "./Astrologers";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
 };
+
+const trainings = [
+  {
+    title: "Tarot Card Reading Training",
+    desc: "Learn professional tarot reading with guided practice.",
+  },
+  {
+    title: "Guided Meditation",
+    desc: "Discover inner peace through structured meditation techniques.",
+  },
+  {
+    title: "Vastu Training",
+    desc: "Learn Vastu principles to create balanced and harmonious spaces.",
+  },
+  {
+    title: "Numerology Training",
+    desc: "Understand the power of numbers and their influence on life.",
+  },
+];
 
 // Generate random twinkling stars
 const stars = Array.from({ length: 40 }, (_, i) => ({
@@ -24,94 +46,8 @@ const stars = Array.from({ length: 40 }, (_, i) => ({
 
 const Index = () => (
   <div>
-    {/* Hero */}
-    <section className="relative overflow-hidden min-h-[75vh] md:min-h-[100vh] flex items-end pb-6 md:pb-14">
-      {/* Soft spiritual gradient background */}
-      <div
-        className="absolute inset-0"
-        style={{ background: "linear-gradient(135deg, #FFF7E6 0%, #FDECC8 40%, #F6D88C 100%)" }}
-      />
-      {/* Radial golden glow */}
-      <div
-        className="absolute inset-0"
-        style={{ background: "radial-gradient(ellipse at 50% 40%, rgba(212,175,55,0.15) 0%, transparent 70%)" }}
-      />
-      {/* Subtle star dots */}
-      {stars.map((s) => (
-        <motion.div
-          key={s.id}
-          className="absolute rounded-full"
-          style={{
-            top: s.top,
-            left: s.left,
-            width: s.size,
-            height: s.size,
-            background: "rgba(212,175,55,0.35)",
-          }}
-          animate={{ opacity: [0.2, 0.8, 0.2] }}
-          transition={{ duration: s.duration, delay: s.delay, repeat: Infinity }}
-        />
-      ))}
-
-      {/* Bottom fade to page background */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-background" />
-
-      <div className="relative container py-8 md:py-0">
-        <motion.div
-          className="max-w-3xl mx-auto text-center"
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
-          <div className="relative overflow-hidden rounded-2xl px-6 py-10 md:px-10 md:py-12 backdrop-blur-md border border-[#D4AF37]/20"
-            style={{ background: "rgba(255,255,255,0.35)" }}
-          >
-            {/* Trust badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-1.5 text-sm text-[#B8962E] mb-8 tracking-wide font-medium">
-              <Sparkles className="h-4 w-4 text-[#D4AF37]" /> Trusted Astrology Guidance Platform
-            </div>
-
-            {/* Gold glow behind heading */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
-                <div className="w-72 h-32 rounded-full bg-[#D4AF37]/15 blur-3xl" />
-              </div>
-              <h1 className="relative font-heading text-4xl md:text-5xl lg:text-6xl leading-tight mb-6" style={{ color: "#2B2B2B" }}>
-                Clarity when life feels uncertain.
-                <br />
-                <span style={{ color: "#D4AF37" }}>Guidance when decisions matter.</span>
-              </h1>
-            </div>
-
-            <p className="max-w-xl mx-auto text-lg mb-10 leading-relaxed" style={{ color: "#4A4A4A" }}>
-              Real astrologers. Real conversations. Real direction.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/book">
-                <Button
-                  size="lg"
-                  className="text-base px-8 text-white border-0 rounded-xl shadow-md"
-                  style={{ background: "#EC2227" }}
-                >
-                  Book Consultation
-                </Button>
-              </Link>
-              <Link to="/pooja">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-gold text-gold bg-gold/10 hover:bg-gold/20 hover:text-red-600"
-                >
-                  Book Pooja
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
+    {/* Hero Section */}
+    <Hero/>
 
     {/* How It Works */}
     <section className="container py-20">
@@ -145,21 +81,7 @@ const Index = () => (
     </section>
 
     {/* Astrologers */}
-    <section className="bg-muted/50 py-20">
-      <div className="container">
-        <h2 className="font-heading text-3xl font-bold text-center mb-4">
-          Verified <span className="text-primary">Astrologers</span>
-        </h2>
-        <p className="text-center text-muted-foreground mb-12 max-w-lg mx-auto">
-          Experienced and trusted astrologers ready to guide you through life's challenges.
-        </p>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {astrologers.map((a) => (
-            <AstrologerCard key={a.name} {...a} />
-          ))}
-        </div>
-      </div>
-    </section>
+    <Astrologers/>
     
     {/* Priest & Pooja Support */}
     <section className="py-24">
@@ -196,7 +118,65 @@ const Index = () => (
           </div>
         </motion.div>
       </div>
-  </section>
+    </section>
+
+    {/* Training & Workshops */}
+    <section className="container py-20">
+      {/* Header */}
+      <motion.div
+        className="text-center mb-6"
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        transition={{ duration: 0.5 }}
+      >
+        <div
+          className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-1.5 text-sm font-medium tracking-wide"
+          style={{ color: "#B8962E" }}
+        >
+          <GraduationCap className="h-4 w-4 text-[#D4AF37]" />
+          Future Programs
+        </div>
+      </motion.div>
+
+      <h2 className="font-heading text-3xl font-bold text-center mb-2">
+        Training & <span className="text-primary">Workshops</span>
+      </h2>
+
+      <p className="text-center text-muted-foreground mb-10 max-w-lg mx-auto">
+        Learn ancient spiritual sciences with structured training and guidance
+        from experienced mentors.
+      </p>
+
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {trainings.map((t, i) => (
+          <motion.div
+            key={t.title}
+            className="rounded-xl border bg-card p-6 shadow-sm hover:shadow-md transition"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+              <Sparkles className="h-6 w-6 text-primary" />
+            </div>
+
+            <h3 className="font-heading text-lg font-semibold mb-2">
+              {t.title}
+            </h3>
+
+            <p className="text-sm text-muted-foreground">
+              {t.desc}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+
+      
+    <AboutSection />
 
   </div>
 );

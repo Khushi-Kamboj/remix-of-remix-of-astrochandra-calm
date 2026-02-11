@@ -26,6 +26,7 @@ const Footer = () => (
             <Link to="/astrologers" className="hover:text-primary transition-colors">Astrologers</Link>
             <Link to="/book" className="hover:text-primary transition-colors">Book Consultation</Link>
             <Link to="/pooja" className="hover:text-primary transition-colors">Pooja Services</Link>
+            <Link to= "/training" className="hover:text-primary transition-colors">Training & Workshops</Link>
           </div>
         </div>
 
