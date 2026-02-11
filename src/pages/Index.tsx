@@ -199,6 +199,42 @@ const Index = () => (
       </div>
   </section>
 
+    {/* Training & Workshops */}
+    <section className="py-24" style={{ background: "linear-gradient(135deg, #FFF7E6 0%, #FDECC8 40%, #F6D88C 100%)" }}>
+      <div className="container">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.5 }}
+          className="mx-auto max-w-2xl"
+        >
+          <div className="rounded-2xl border border-[#D4AF37]/20 bg-white/35 backdrop-blur-md px-8 py-10 md:px-12 md:py-12 shadow-[0_20px_60px_-20px_rgba(212,175,55,0.15)]">
+            <h2 className="font-heading text-2xl md:text-3xl font-semibold mb-4" style={{ color: "#2B2B2B" }}>
+              Training & Workshops
+            </h2>
+            <p className="mb-6 leading-relaxed" style={{ color: "#4A4A4A" }}>
+              We are preparing guided training programs in spiritual sciences to help you learn and grow with proper guidance.
+            </p>
+            <ul className="space-y-3 mb-8">
+              {["Meditation Guidance", "Tarot Reading Training", "Psychic Development", "Numerology Training"].map((item) => (
+                <li key={item} className="flex items-center gap-3 text-sm font-medium" style={{ color: "#2B2B2B" }}>
+                  <Sparkles className="h-4 w-4 text-[#D4AF37] flex-shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="text-center">
+              <span className="inline-block rounded-full px-5 py-1.5 text-xs font-bold text-white tracking-wider uppercase" style={{ background: "#D4AF37" }}>
+                Coming Soon
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+
     {/* Tarot Training */}
     <section className="container py-20">
       <motion.div
