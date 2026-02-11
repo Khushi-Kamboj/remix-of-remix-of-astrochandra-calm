@@ -100,11 +100,26 @@
   .text-gold {
     color: hsl(var(--gold));
   }
+
   .bg-gold {
     background-color: hsl(var(--gold));
   }
+
   .border-gold {
     border-color: hsl(var(--gold));
+  }
+
+  .animate-scroll {
+    animation: scroll linear infinite;
+  }
+
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
   }
 }
 
