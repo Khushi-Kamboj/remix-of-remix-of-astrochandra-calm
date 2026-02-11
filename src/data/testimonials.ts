@@ -1,5 +1,5 @@
 import aisha from "@/assets/aisha.png";
-import daniel from "@/assets/Daniel.png";
+import daniel from "@/assets/daniel.png";
 import rahul from "@/assets/rahul.png";
 import sophia from "@/assets/Sophia.png";
 
