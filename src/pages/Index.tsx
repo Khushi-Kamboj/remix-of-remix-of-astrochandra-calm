@@ -26,42 +26,38 @@ const stars = Array.from({ length: 40 }, (_, i) => ({
 const Index = () => (
   <div>
     {/* Hero */}
-    <section className="relative overflow-hidden min-h-[100vh] flex items-center">
-      {/* Background image */}
+    <section className="relative overflow-hidden min-h-[100vh] flex items-end pb-12 md:pb-16">
+      {/* Soft spiritual gradient background */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg})` }}
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(135deg, #FFF7E6 0%, #FDECC8 40%, #F6D88C 100%)" }}
       />
-      {/* Soft dark overlay */}
-      <div className="absolute inset-0 bg-black/60 md:bg-black/50" />
+      {/* Radial golden glow */}
+      <div
+        className="absolute inset-0"
+        style={{ background: "radial-gradient(ellipse at 50% 40%, rgba(212,175,55,0.15) 0%, transparent 70%)" }}
+      />
+      {/* Subtle star dots */}
+      {stars.map((s) => (
+        <motion.div
+          key={s.id}
+          className="absolute rounded-full"
+          style={{
+            top: s.top,
+            left: s.left,
+            width: s.size,
+            height: s.size,
+            background: "rgba(212,175,55,0.35)",
+          }}
+          animate={{ opacity: [0.2, 0.8, 0.2] }}
+          transition={{ duration: s.duration, delay: s.delay, repeat: Infinity }}
+        />
+      ))}
 
-      {/* Twinkling stars */}
-      <div className="absolute inset-0 pointer-events-none">
-        {stars.map((star) => (
-          <motion.div
-            key={star.id}
-            className="absolute rounded-full bg-white"
-            style={{
-              top: star.top,
-              left: star.left,
-              width: star.size,
-              height: star.size,
-            }}
-            animate={{ opacity: [0.2, 1, 0.2] }}
-            transition={{
-              duration: star.duration,
-              repeat: Infinity,
-              delay: star.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+      {/* Bottom fade to page background */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-background" />
 
-      {/* Bottom fade */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
-
-      <div className="relative container py-16 md:py-24">
+      <div className="relative container">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           initial="hidden"
@@ -69,28 +65,27 @@ const Index = () => (
           variants={fadeUp}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-white/20 px-6 py-10 md:px-10 md:py-12 shadow-[0_20px_60px_-25px_rgba(0,0,0,0.75)]">
-            {/* Box background (same hero image) */}
-            <div
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url(${heroBg})` }}
-            />
-            {/* Dark overlay for readability */}
-            <div className="absolute inset-0 bg-black/60" />
-
-            <div className="relative">
+          <div className="relative overflow-hidden rounded-2xl px-6 py-10 md:px-10 md:py-12 backdrop-blur-md border border-[#D4AF37]/20"
+            style={{ background: "rgba(255,255,255,0.35)" }}
+          >
             {/* Trust badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-white/10 backdrop-blur-md px-4 py-1.5 text-sm text-[#D4AF37] mb-8 tracking-wide">
-              <Sparkles className="h-4 w-4" /> Trusted Astrology Guidance Platform
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-1.5 text-sm text-[#B8962E] mb-8 tracking-wide font-medium">
+              <Sparkles className="h-4 w-4 text-[#D4AF37]" /> Trusted Astrology Guidance Platform
             </div>
 
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl leading-tight mb-6 text-white">
-              Clarity when life feels uncertain.
-              <br />
-              <span className="text-[#D4AF37]">Guidance when decisions matter.</span>
-            </h1>
+            {/* Gold glow behind heading */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
+                <div className="w-72 h-32 rounded-full bg-[#D4AF37]/15 blur-3xl" />
+              </div>
+              <h1 className="relative font-heading text-4xl md:text-5xl lg:text-6xl leading-tight mb-6" style={{ color: "#2B2B2B" }}>
+                Clarity when life feels uncertain.
+                <br />
+                <span style={{ color: "#D4AF37" }}>Guidance when decisions matter.</span>
+              </h1>
+            </div>
 
-            <p className="max-w-xl mx-auto text-lg text-white/90 mb-10 leading-relaxed">
+            <p className="max-w-xl mx-auto text-lg mb-10 leading-relaxed" style={{ color: "#4A4A4A" }}>
               Real astrologers. Real conversations. Real direction.
             </p>
 
@@ -98,7 +93,8 @@ const Index = () => (
               <Link to="/book">
                 <Button
                   size="lg"
-                  className="text-base px-8 shadow-lg bg-[#C62828] hover:bg-[#B71C1C] text-white border-0"
+                  className="text-base px-8 text-white border-0 rounded-xl shadow-md"
+                  style={{ background: "#EC2227" }}
                 >
                   Book Consultation
                 </Button>
@@ -107,12 +103,11 @@ const Index = () => (
                 <Button
                   size="lg"
                   variant="outline"
-                  className="text-base px-8 bg-[#C62828] hover:bg-[#B71C1C] text-white backdrop-blur-sm"
+                  className="border-gold text-gold bg-gold/10 hover:bg-gold/20 hover:text-red-600"
                 >
                   Book Pooja
                 </Button>
               </Link>
-            </div>
             </div>
           </div>
         </motion.div>
@@ -166,41 +161,43 @@ const Index = () => (
         </div>
       </div>
     </section>
-
-    {/* Pooja Support */}
-    <section className="container py-24 text-center">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={fadeUp}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="relative mx-auto max-w-2xl overflow-hidden rounded-2xl border shadow-sm my-6 md:my-10">
-          {/* Background image using pooja.jpeg */}
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${poojaImg})` }}
-          />
-          {/* Dark overlay for readability / slight fade */}
-          <div className="absolute inset-0 bg-black/65" />
-
-          <div className="relative px-8 py-14 md:px-12 md:py-18">
-            <h2 className="font-heading text-2xl font-bold mb-3 text-white">
+    
+    {/* Priest & Pooja Support */}
+    <section className="py-24">
+      <div className="container">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.5 }}
+          className="mx-auto max-w-2xl"
+        >
+          <div className="rounded-2xl border border-black/20 bg-black/5 backdrop-blur-md px-8 py-10 md:px-12 md:py-12 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
+            
+            <h2 className="font-heading text-2xl md:text-3xl font-semibold mb-4 text-black">
               Priest & Pooja Support
             </h2>
-            <p className="mb-6 text-white/90">
-              After your consultation, if our astrologer recommends a specific pooja or remedy, we can arrange an experienced priest to perform it for you — either at your home or at a temple.
+
+            <p className="mb-6 text-black/80 leading-relaxed">
+              After your consultation, if our astrologer recommends a specific
+              pooja or remedy, we can arrange an experienced priest to perform
+              it for you — either at your home or at a temple.
             </p>
+
             <Link to="/pooja">
-              <Button variant="outline" className="border-gold text-gold bg-gold/10 hover:bg-gold/20 hover:text-black">
+              <Button
+                size="lg"
+                className="bg-[#C62828] hover:bg-[#B71C1C] text-white shadow-lg"
+              >
                 Learn About Pooja Services
               </Button>
             </Link>
+
           </div>
-        </div>
-      </motion.div>
-    </section>
+        </motion.div>
+      </div>
+  </section>
 
     {/* Tarot Training */}
     <section className="container py-20">
