@@ -81,13 +81,22 @@ const Hero = () => {
             </Button>
             </Link>
 
-            <Link to="/pooja">
+        <Link to="/pooja">
             <Button
                 size="sm"
-                className="px-5 py-2 text-sm rounded-lg border border-[#D4AF37] text-[#D4AF37] bg-black/30"
-            >
+                className="
+                    px-5 py-2 text-sm rounded-lg
+                    border border-[#D4AF37]
+                    text-[#D4AF37]
+                    bg-black/30
+                    transition-all duration-300
+                    hover:bg-[#D4AF37]
+                    hover:text-black
+                    hover:shadow-[0_0_15px_rgba(212,175,55,0.6)]
+                "
+                >
                 Book Pooja
-            </Button>
+                </Button>
             </Link>
         </div>
         </motion.div>

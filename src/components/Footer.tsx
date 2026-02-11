@@ -37,7 +37,13 @@ const Footer = () => (
               <Phone className="h-4 w-4 text-primary" /> +91 98765 xxxxx
             </span>
             <span className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-primary" /> contact@astrochandra.ai
+              <Mail className="h-4 w-4 text-primary" />
+              <a
+                href="mailto:contact@astrochandra.ai"
+                className="hover:text-primary transition-colors"
+              >
+                contact@astrochandra.ai
+              </a>
             </span>
           </div>
         </div>

@@ -177,11 +177,12 @@ const Index = () => (
       </div>
     </section>
 
-      {/* About Section */}
+    {/* About Section */}
     <AboutSection />
 
-      {/* Testimonials */}
-      <TestimonialSlider testimonials={testimonials} speed={5} />;
+    {/* Testimonials */}
+    <TestimonialSlider testimonials={testimonials} speed={15} />;
+  
   </div>
 );
 
