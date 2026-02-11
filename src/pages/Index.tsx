@@ -9,6 +9,8 @@ import Hero from "@/components/Hero"
 import heroBg from "@/assets/bg_astrochandra.png";
 import poojaImg from "@/assets/pooja.jpeg";
 import Astrologers from "./Astrologers";
+import TestimonialSlider from "@/components/TestimonialSlider";
+import { testimonials } from "@/data/testimonials";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -175,9 +177,11 @@ const Index = () => (
       </div>
     </section>
 
-      
+      {/* About Section */}
     <AboutSection />
 
+      {/* Testimonials */}
+      <TestimonialSlider testimonials={testimonials} speed={5} />;
   </div>
 );
 

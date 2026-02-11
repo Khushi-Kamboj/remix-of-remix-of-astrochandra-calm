@@ -12,7 +12,7 @@ const fadeUp = {
 
 const Hero = () => {
   return (
-    <section className="relative h-[90vh] md:min-h-screen overflow-hidden">
+    <section className="relative h-[100vh] md:min-h-screen overflow-hidden">
       
       {/* Desktop Background */}
       <div
