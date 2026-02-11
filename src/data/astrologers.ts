@@ -10,7 +10,7 @@ export const astrologers = [
     imageUrl: anu,
   },
   {
-    name: "Jyotishi Meena Devi",
+    name: "xyz",
     experience: "12 years experience",
     specialization: "Career & Finance Guidance",
     languages: "Hindi, Marathi",
@@ -18,7 +18,7 @@ export const astrologers = [
     imageUrl: "",
   },
   {
-    name: "Acharya Sunil Tripathi",
+    name: "xyz",
     experience: "22 years experience",
     specialization: "Graha Dosha, Remedies",
     languages: "Hindi, English, Sanskrit",
@@ -26,7 +26,7 @@ export const astrologers = [
     imageUrl: "",
   },
   {
-    name: "Dr. Kavita Joshi",
+    name: "xyz",
     experience: "15 years experience",
     specialization: "Marriage & Relationship",
     languages: "Hindi, English, Gujarati",
@@ -34,7 +34,7 @@ export const astrologers = [
     imageUrl: "",
   },
   {
-    name: "Pandit Arjun Mishra",
+    name: "xyz",
     experience: "20 years experience",
     specialization: "Health & Vastu Shastra",
     languages: "Hindi, English",
