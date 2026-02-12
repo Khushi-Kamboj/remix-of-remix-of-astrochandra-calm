@@ -15,6 +15,7 @@ import PoojaServices from "./pages/PoojaServices";
 import TrainingWorkshops from "./pages/TrainingWorkshops";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import AuthCallback from "./pages/AuthCallback";
 import UserDashboard from "./pages/UserDashboard";
 import AstrologerDashboard from "./pages/AstrologerDashboard";
 import PriestDashboard from "./pages/PriestDashboard";
@@ -42,6 +43,7 @@ const App = () => (
                 <Route path="/training" element={<TrainingWorkshops />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
                 <Route path="/astrologer-dashboard" element={<ProtectedRoute allowedRoles={["astrologer", "admin"]}><AstrologerDashboard /></ProtectedRoute>} />
                 <Route path="/priest-dashboard" element={<ProtectedRoute allowedRoles={["priest", "admin"]}><PriestDashboard /></ProtectedRoute>} />
