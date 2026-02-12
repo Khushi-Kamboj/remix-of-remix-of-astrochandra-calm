@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import FamilyProfiles from "@/components/FamilyProfiles";
+import BookingsList from "@/components/BookingsList";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -95,14 +96,7 @@ const UserDashboard = () => {
 
       <FamilyProfiles />
 
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>My Bookings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground text-sm">No bookings yet. This feature is coming soon.</p>
-        </CardContent>
-      </Card>
+      <BookingsList />
     </div>
   );
 };
