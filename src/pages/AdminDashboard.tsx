@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
 import type { Database } from "@/integrations/supabase/types";
 
 type AppRole = Database["public"]["Enums"]["app_role"];
@@ -16,12 +18,34 @@ interface UserWithRole {
   is_verified: boolean | null;
   created_at: string | null;
   role: AppRole;
-  email?: string;
+}
+
+interface Booking {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  service_type: string;
+  problem_category: string;
+  preferred_slot: string;
+  status: string;
+  created_at: string;
+  assigned_to: string | null;
+  user_id: string;
+}
+
+interface Professional {
+  id: string;
+  full_name: string | null;
+  role: AppRole;
 }
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState<UserWithRole[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [loading, setLoading] = useState(true);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchUsers = async () => {
@@ -36,11 +60,39 @@ const AdminDashboard = () => {
         role: roleMap.get(p.id) || "user",
       }));
       setUsers(merged);
+
+      // Extract astrologers and priests for assignment
+      const pros: Professional[] = merged
+        .filter((u) => u.role === "astrologer" || u.role === "priest")
+        .map((u) => ({ id: u.id, full_name: u.full_name, role: u.role }));
+      setProfessionals(pros);
     }
     setLoading(false);
   };
 
-  useEffect(() => { fetchUsers(); }, []);
+  const fetchBookings = async () => {
+    setBookingsLoading(true);
+    const { data, error } = await supabase
+      .from("bookings")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) setBookings(data as Booking[]);
+    setBookingsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchBookings();
+
+    const channel = supabase
+      .channel("admin_bookings")
+      .on("postgres_changes", { event: "*", schema: "public", table: "bookings" }, () => {
+        fetchBookings();
+      })
+      .subscribe();
+
+    return () => { channel.unsubscribe(); };
+  }, []);
 
   const handleRoleChange = async (userId: string, newRole: AppRole) => {
     const { error } = await supabase
@@ -68,6 +120,19 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleAssign = async (bookingId: string, assigneeId: string) => {
+    const { error } = await supabase
+      .from("bookings")
+      .update({ assigned_to: assigneeId, status: "assigned" })
+      .eq("id", bookingId);
+    if (error) {
+      toast({ title: "Error assigning", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Booking assigned" });
+      fetchBookings();
+    }
+  };
+
   const roleBadgeColor = (role: string) => {
     switch (role) {
       case "admin": return "bg-red-600";
@@ -77,67 +142,166 @@ const AdminDashboard = () => {
     }
   };
 
+  const statusBadgeColor = (status: string) => {
+    switch (status) {
+      case "pending": return "bg-yellow-100 text-yellow-800";
+      case "assigned": return "bg-blue-100 text-blue-800";
+      case "accepted": return "bg-green-100 text-green-800";
+      case "rejected": return "bg-red-100 text-red-800";
+      case "completed": return "bg-gray-100 text-gray-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getAssigneeName = (assignedTo: string | null) => {
+    if (!assignedTo) return "Unassigned";
+    const pro = professionals.find((p) => p.id === assignedTo);
+    return pro?.full_name || "Unknown";
+  };
+
+  const getEligibleProfessionals = (serviceType: string) => {
+    if (serviceType === "consultation") return professionals.filter((p) => p.role === "astrologer");
+    if (serviceType === "pooja") return professionals.filter((p) => p.role === "priest");
+    return [];
+  };
+
   return (
     <div className="container py-12">
       <h1 className="text-3xl font-bold mb-8" style={{ color: "#2B2B2B" }}>Admin Dashboard</h1>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>All Users ({users.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <p className="text-muted-foreground">Loading...</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Verified</TableHead>
-                    <TableHead>Change Role</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((u) => (
-                    <TableRow key={u.id}>
-                      <TableCell>{u.full_name || "—"}</TableCell>
-                      <TableCell>
-                        <Badge className={roleBadgeColor(u.role)}>{u.role}</Badge>
-                      </TableCell>
-                      <TableCell>{u.is_verified ? "✅" : "—"}</TableCell>
-                      <TableCell>
-                        <Select value={u.role} onValueChange={(v) => handleRoleChange(u.id, v as AppRole)}>
-                          <SelectTrigger className="w-[140px]">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="user">User</SelectItem>
-                            <SelectItem value="astrologer">Astrologer</SelectItem>
-                            <SelectItem value="priest">Priest</SelectItem>
-                            <SelectItem value="admin">Admin</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          size="sm"
-                          variant={u.is_verified ? "outline" : "default"}
-                          onClick={() => handleVerify(u.id, !u.is_verified)}
-                        >
-                          {u.is_verified ? "Unverify" : "Verify"}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="bookings" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="bookings">Bookings ({bookings.length})</TabsTrigger>
+          <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="bookings">
+          <Card>
+            <CardHeader>
+              <CardTitle>All Bookings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {bookingsLoading ? (
+                <p className="text-muted-foreground">Loading...</p>
+              ) : bookings.length === 0 ? (
+                <p className="text-muted-foreground text-sm">No bookings yet.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Slot</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Assigned To</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {bookings.map((b) => (
+                        <TableRow key={b.id}>
+                          <TableCell className="font-medium">{b.name}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">
+                              {b.service_type === "consultation" ? "Consultation" : "Pooja"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{b.problem_category}</TableCell>
+                          <TableCell className="text-sm">{b.preferred_slot}</TableCell>
+                          <TableCell>
+                            <Badge className={statusBadgeColor(b.status)}>{b.status}</Badge>
+                          </TableCell>
+                          <TableCell className="text-sm">{getAssigneeName(b.assigned_to)}</TableCell>
+                          <TableCell>
+                            {!b.assigned_to || b.status === "pending" ? (
+                              <Select onValueChange={(v) => handleAssign(b.id, v)}>
+                                <SelectTrigger className="w-[160px]">
+                                  <SelectValue placeholder="Assign to..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {getEligibleProfessionals(b.service_type).map((p) => (
+                                    <SelectItem key={p.id} value={p.id}>
+                                      {p.full_name || "Unnamed"} ({p.role})
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <span className="text-sm text-muted-foreground">—</span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="users">
+          <Card>
+            <CardHeader>
+              <CardTitle>All Users</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <p className="text-muted-foreground">Loading...</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Verified</TableHead>
+                        <TableHead>Change Role</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {users.map((u) => (
+                        <TableRow key={u.id}>
+                          <TableCell>{u.full_name || "—"}</TableCell>
+                          <TableCell>
+                            <Badge className={roleBadgeColor(u.role)}>{u.role}</Badge>
+                          </TableCell>
+                          <TableCell>{u.is_verified ? "✅" : "—"}</TableCell>
+                          <TableCell>
+                            <Select value={u.role} onValueChange={(v) => handleRoleChange(u.id, v as AppRole)}>
+                              <SelectTrigger className="w-[140px]">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="user">User</SelectItem>
+                                <SelectItem value="astrologer">Astrologer</SelectItem>
+                                <SelectItem value="priest">Priest</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              size="sm"
+                              variant={u.is_verified ? "outline" : "default"}
+                              onClick={() => handleVerify(u.id, !u.is_verified)}
+                            >
+                              {u.is_verified ? "Unverify" : "Verify"}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
