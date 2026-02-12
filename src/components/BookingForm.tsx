@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Form,
   FormControl,
@@ -82,6 +84,7 @@ interface BookingFormProps {
 const BookingForm = ({ serviceType }: BookingFormProps) => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
@@ -150,6 +153,29 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       } else {
         await new Promise((r) => setTimeout(r, 1200));
         console.log("Form data (no Google Sheets URL configured):", payload);
+      }
+
+      // Save to Supabase if user is logged in
+      if (user) {
+        const { error: dbError } = await supabase.from("bookings").insert({
+          user_id: user.id,
+          service_type: serviceType,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          problem_category: data.problemCategory,
+          dependent_category: isOther ? (data.otherCategory || null) : (data.dependentCategory || null),
+          other_category: isOther ? (data.otherCategory || null) : null,
+          dob: format(data.dob, "yyyy-MM-dd"),
+          birth_time: birthTime,
+          birth_state: data.birthState,
+          preferred_slot: data.preferredSlot,
+          description: data.description || null,
+          pooja_type: data.poojaType || null,
+        });
+        if (dbError) {
+          console.error("Supabase insert error:", dbError);
+        }
       }
 
       setSubmitted(true);

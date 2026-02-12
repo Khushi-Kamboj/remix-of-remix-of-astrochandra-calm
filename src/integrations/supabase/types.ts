@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          birth_state: string | null
+          birth_time: string | null
+          created_at: string
+          dependent_category: string | null
+          description: string | null
+          dob: string | null
+          email: string
+          id: string
+          name: string
+          other_category: string | null
+          phone: string
+          pooja_type: string | null
+          preferred_slot: string
+          problem_category: string
+          service_type: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          birth_state?: string | null
+          birth_time?: string | null
+          created_at?: string
+          dependent_category?: string | null
+          description?: string | null
+          dob?: string | null
+          email: string
+          id?: string
+          name: string
+          other_category?: string | null
+          phone: string
+          pooja_type?: string | null
+          preferred_slot: string
+          problem_category: string
+          service_type: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          birth_state?: string | null
+          birth_time?: string | null
+          created_at?: string
+          dependent_category?: string | null
+          description?: string | null
+          dob?: string | null
+          email?: string
+          id?: string
+          name?: string
+          other_category?: string | null
+          phone?: string
+          pooja_type?: string | null
+          preferred_slot?: string
+          problem_category?: string
+          service_type?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
