@@ -37,8 +37,8 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/astrologers" element={<Astrologers />} />
-                <Route path="/book" element={<BookConsultation />} />
-                <Route path="/pooja" element={<PoojaServices />} />
+                <Route path="/book" element={<ProtectedRoute><BookConsultation /></ProtectedRoute>} />
+                <Route path="/pooja" element={<ProtectedRoute><PoojaServices /></ProtectedRoute>} />
                 <Route path="/training" element={<TrainingWorkshops />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />

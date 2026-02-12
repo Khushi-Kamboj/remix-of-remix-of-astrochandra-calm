@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,13 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+
+  const getRedirectPath = () => {
+    const from = (location.state as any)?.from?.pathname || null;
+    return (from === "/book" || from === "/pooja") ? from : "/dashboard";
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +40,7 @@ const Signup = () => {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Check your email", description: "We've sent a verification link to your email." });
-      navigate("/login");
+      navigate(getRedirectPath(), { replace: true });
     }
   };
 
