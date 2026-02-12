@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import FirstLoginModal from "@/components/FirstLoginModal";
 import Index from "./pages/Index";
 import Astrologers from "./pages/Astrologers";
 import BookConsultation from "./pages/BookConsultation";
@@ -31,6 +32,7 @@ const App = () => (
         <AuthProvider>
           <div className="flex min-h-screen flex-col">
             <Navbar />
+            <FirstLoginModal />
             <main className="flex-1">
               <Routes>
                 <Route path="/" element={<Index />} />
