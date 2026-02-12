@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -11,6 +11,7 @@ interface Props {
 
 const ProtectedRoute = ({ children, allowedRoles }: Props) => {
   const { user, role, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -20,7 +21,9 @@ const ProtectedRoute = ({ children, allowedRoles }: Props) => {
     );
   }
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
   if (allowedRoles && role && !allowedRoles.includes(role)) {
     return <Navigate to="/dashboard" replace />;

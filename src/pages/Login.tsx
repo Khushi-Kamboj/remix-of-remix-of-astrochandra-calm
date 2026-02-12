@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
@@ -16,12 +16,18 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { user, role } = useAuth();
 
   useEffect(() => {
     if (user && role) {
-      redirectByRole(role);
+      const from = (location.state as any)?.from?.pathname || null;
+      if (from === "/book" || from === "/pooja") {
+        navigate(from, { replace: true });
+      } else {
+        redirectByRole(role);
+      }
     }
   }, [user, role]);
 
