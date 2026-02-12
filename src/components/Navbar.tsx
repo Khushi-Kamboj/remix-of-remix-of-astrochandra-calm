@@ -10,7 +10,7 @@ const navLinks = [
   { label: "Astrologers", path: "/astrologers" },
   { label: "Book Consultation", path: "/book" },
   { label: "Pooja Services", path: "/pooja" },
-  { label: "Training", path: "/training" },
+  { label: "Training & Workshops", path: "/training" },
 ];
 
 const Navbar = () => {
