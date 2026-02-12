@@ -23,6 +23,7 @@ export type Database = {
           description: string | null
           dob: string | null
           email: string
+          family_profile_id: string | null
           id: string
           name: string
           other_category: string | null
@@ -43,6 +44,7 @@ export type Database = {
           description?: string | null
           dob?: string | null
           email: string
+          family_profile_id?: string | null
           id?: string
           name: string
           other_category?: string | null
@@ -63,6 +65,7 @@ export type Database = {
           description?: string | null
           dob?: string | null
           email?: string
+          family_profile_id?: string | null
           id?: string
           name?: string
           other_category?: string | null
@@ -72,6 +75,50 @@ export type Database = {
           problem_category?: string
           service_type?: string
           status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_family_profile_id_fkey"
+            columns: ["family_profile_id"]
+            isOneToOne: false
+            referencedRelation: "family_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_profiles: {
+        Row: {
+          birth_date: string | null
+          birth_place: string | null
+          birth_time: string | null
+          created_at: string
+          full_name: string
+          id: string
+          relation: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          birth_date?: string | null
+          birth_place?: string | null
+          birth_time?: string | null
+          created_at?: string
+          full_name: string
+          id?: string
+          relation?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          birth_date?: string | null
+          birth_place?: string | null
+          birth_time?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          relation?: string | null
           updated_at?: string
           user_id?: string
         }

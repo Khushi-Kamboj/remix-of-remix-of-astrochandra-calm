@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import FamilyProfiles from "@/components/FamilyProfiles";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -91,6 +92,8 @@ const UserDashboard = () => {
           )}
         </CardContent>
       </Card>
+
+      <FamilyProfiles />
 
       <Card className="mt-6">
         <CardHeader>

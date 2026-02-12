@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -84,7 +84,22 @@ interface BookingFormProps {
 const BookingForm = ({ serviceType }: BookingFormProps) => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const [familyProfiles, setFamilyProfiles] = useState<any[]>([]);
+  const [selectedProfileId, setSelectedProfileId] = useState<string>("self");
+
+  // Fetch family profiles for the logged-in user
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("family_profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        if (data) setFamilyProfiles(data);
+      });
+  }, [user]);
 
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
@@ -104,6 +119,43 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       poojaType: "",
     },
   });
+
+  // Auto-fill from selected profile
+  useEffect(() => {
+    if (selectedProfileId === "self" && profile) {
+      form.setValue("name", profile.full_name || "");
+      if (profile.birth_date) {
+        form.setValue("dob", new Date(profile.birth_date));
+      }
+      if (profile.birth_time) {
+        const match = profile.birth_time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+        if (match) {
+          form.setValue("birthHour", match[1]);
+          form.setValue("birthMinute", match[2]);
+          form.setValue("birthAmpm", match[3].toUpperCase());
+        }
+      }
+      if (profile.birth_place) form.setValue("birthState", profile.birth_place);
+    } else {
+      const fp = familyProfiles.find((p) => p.id === selectedProfileId);
+      if (fp) {
+        form.setValue("name", fp.full_name || "");
+        if (fp.birth_date) form.setValue("dob", new Date(fp.birth_date));
+        if (fp.birth_time) {
+          const match = fp.birth_time.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+          if (match) {
+            form.setValue("birthHour", match[1]);
+            form.setValue("birthMinute", match[2]);
+            form.setValue("birthAmpm", match[3].toUpperCase());
+          }
+        }
+        if (fp.birth_place) form.setValue("birthState", fp.birth_place);
+      }
+    }
+    if (user) {
+      form.setValue("email", user.email || "");
+    }
+  }, [selectedProfileId, profile, familyProfiles, user]);
 
   const watchedCategory = form.watch("problemCategory");
   const isOther = watchedCategory === "Other";
@@ -159,6 +211,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       if (user) {
         const { error: dbError } = await supabase.from("bookings").insert({
           user_id: user.id,
+          family_profile_id: selectedProfileId !== "self" ? selectedProfileId : null,
           service_type: serviceType,
           name: data.name,
           email: data.email,
@@ -211,6 +264,26 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="rounded-2xl border bg-card p-6 md:p-8 shadow-sm space-y-5"
       >
+        {/* Profile Selector - only shown for logged-in users with family profiles */}
+        {user && familyProfiles.length > 0 && (
+          <div className="space-y-2">
+            <FormLabel>Booking For</FormLabel>
+            <Select value={selectedProfileId} onValueChange={setSelectedProfileId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select profile" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="self">Myself ({profile?.full_name || user.email})</SelectItem>
+                {familyProfiles.map((fp) => (
+                  <SelectItem key={fp.id} value={fp.id}>
+                    {fp.full_name} {fp.relation ? `(${fp.relation})` : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
         {/* Name & Phone */}
         <div className="grid gap-5 sm:grid-cols-2">
           <FormField
