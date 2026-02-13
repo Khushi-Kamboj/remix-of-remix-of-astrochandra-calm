@@ -119,81 +119,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    // Persist a processed-user id across renders to avoid duplicate fetches
-    const processedUserRef = processedUserIdRef;
     let isMounted = true;
 
-    // Helper to process session once per user id
     const processSession = async (session: Session | null) => {
       if (!isMounted) return;
 
+      setLoading(true);
       setSession(session);
       setUser(session?.user ?? null);
 
-      const userId = session?.user?.id ?? null;
-
-      if (userId) {
-        // Avoid refetching if we've already processed this user id
-        if (processedUserRef.current === userId) {
-          console.info(`[useAuth] already processed user ${userId}, skipping fetch`);
-          setLoading(false);
-          return;
+      try {
+        if (session?.user) {
+          // Fetch profile and role once for this session.user
+          await fetchUserData(session.user.id);
+        } else {
+          // No session - clear profile and role
+          setProfile(null);
+          setRole(null);
+          setError(null);
         }
-
-        try {
-          await fetchUserData(userId);
-          processedUserRef.current = userId;
-          console.info(`[useAuth] processedUserRef set to ${userId}`);
-        } catch (err) {
-          console.error("Error processing session:", err);
-        }
-      } else {
-        // No session: clear data
-        setProfile(null);
-        setRole(null);
-        setError(null);
-        processedUserRef.current = null;
-        console.info("[useAuth] no session, cleared processedUserRef");
+      } catch (err) {
+        console.error("processSession error:", err);
+      } finally {
+        if (isMounted) setLoading(false);
       }
-
-      setLoading(false);
     };
 
-    // Listen to auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.info(`[useAuth] onAuthStateChange event=${event} user=${session?.user?.id ?? null}`);
-        setLoading(true);
-        try {
-          await processSession(session);
-        } catch (err) {
-          console.error("onAuthStateChange processing error:", err);
-          setLoading(false);
-        }
-      }
-    );
+    // set up listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // processSession will set loading and fetch data as needed
+      processSession(session ?? null);
+    });
 
-    // Restore session from storage on mount
+    // one-time session restore on mount
     (async () => {
       try {
-        setLoading(true);
-        console.info("[useAuth] restoring session via getSession()");
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-
-        if (!isMounted) return;
-
         if (sessionError) {
           setError(sessionError.message);
-          setLoading(false);
+          if (isMounted) setLoading(false);
           return;
         }
 
-        console.info("[useAuth] getSession returned", { hasSession: !!session?.user?.id });
         await processSession(session ?? null);
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : "Failed to restore session";
         setError(errMsg);
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     })();
 
