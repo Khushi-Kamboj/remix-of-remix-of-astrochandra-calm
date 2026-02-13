@@ -1,0 +1,2 @@
+/*    /index.html   200
+# Netlify rule to serve index.html for all client-side routes, including /auth/callback
