@@ -25,8 +25,18 @@ const ProtectedRoute = ({ children, allowedRoles }: Props) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles && role && !allowedRoles.includes(role)) {
-    return <Navigate to="/dashboard" replace />;
+  // If role-based access is required, wait for role to load
+  if (allowedRoles) {
+    if (!role) {
+      return (
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      );
+    }
+    if (!allowedRoles.includes(role)) {
+      return <Navigate to="/dashboard" replace />;
+    }
   }
 
   return <>{children}</>;

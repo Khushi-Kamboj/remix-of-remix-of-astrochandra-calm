@@ -1,4 +1,4 @@
-import anu from "@/assets/anu.jpeg";
+import anu from "@/assets/anu.webp";
 
 export const astrologers = [
   {

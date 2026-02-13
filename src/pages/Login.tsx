@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,14 +21,15 @@ const Login = () => {
 
   useEffect(() => {
     if (user && role) {
-      const from = (location.state as any)?.from?.pathname || null;
+      const state = location.state as { from?: { pathname: string } } | null;
+      const from = state?.from?.pathname || null;
       if (from === "/book" || from === "/pooja") {
         navigate(from, { replace: true });
       } else {
         redirectByRole(role);
       }
     }
-  }, [user, role]);
+  }, [user, role, navigate, location]);
 
   const redirectByRole = (r: string) => {
     switch (r) {
@@ -52,8 +52,11 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    const { error } = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/auth/callback",
+      },
     });
     setGoogleLoading(false);
     if (error) {

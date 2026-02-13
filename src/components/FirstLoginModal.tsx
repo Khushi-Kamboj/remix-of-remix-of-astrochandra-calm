@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { indianStates } from "@/data/booking-constants";
@@ -25,43 +25,91 @@ const FirstLoginModal = () => {
   const [birthAmpm, setBirthAmpm] = useState("");
   const [birthState, setBirthState] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  // Show modal only if user is logged in and profile is missing birth data
-  const needsData = user && profile && !profile.birth_date && !profile.birth_time && !profile.birth_place;
+  // Dismissal key to avoid immediately re-opening the modal after user clicks X
+  const dismissalKey = user ? `complete_profile_dismissed_${user.id}` : "complete_profile_dismissed";
+
+  // Profile considered incomplete when missing key fields
+  const needsData = !!user && (
+    !profile || !profile.full_name || !profile.birth_date || !profile.birth_time || !profile.birth_place
+  );
+
+  // Reopen logic: if user dismissed recently, wait for an hour before reopening
+  useEffect(() => {
+    if (!user) return;
+
+    const dismissed = localStorage.getItem(dismissalKey);
+    const dismissedAt = dismissed ? Number(dismissed) : 0;
+    const oneHour = 1000 * 60 * 60;
+
+    if (needsData) {
+      // Open if not dismissed recently
+      if (!dismissedAt || Date.now() - dismissedAt > oneHour) {
+        setOpen(true);
+      }
+    } else {
+      // Profile complete -> clear dismissal and close
+      localStorage.removeItem(dismissalKey);
+      setOpen(false);
+    }
+  }, [needsData, user, dismissalKey]);
 
   const handleSubmit = async () => {
     if (!dob || !birthHour || !birthMinute || !birthAmpm || !birthState || !user) return;
 
     setLoading(true);
     const birthTime = `${birthHour}:${birthMinute} ${birthAmpm}`;
+
+    // Use upsert so we handle missing profile rows as well as updates
     const { error } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        id: user.id,
         birth_date: format(dob, "yyyy-MM-dd"),
         birth_time: birthTime,
         birth_place: birthState,
       })
-      .eq("id", user.id);
+      .select();
 
     setLoading(false);
     if (error) {
       toast({ title: "Error saving details", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Details saved!", description: "Your birth details have been saved." });
+      // Clear dismissal and refresh
+      localStorage.removeItem(dismissalKey);
       await refreshProfile();
+      setOpen(false);
     }
   };
 
-  if (!needsData) return null;
+  if (!needsData && !open) return null;
 
   return (
-    <Dialog open={true}>
-      <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
+    <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Complete Your Profile</DialogTitle>
-          <DialogDescription>
-            Please provide your birth details for personalized astrological recommendations.
-          </DialogDescription>
+          <div className="flex items-start justify-between">
+            <div>
+              <DialogTitle>Complete Your Profile</DialogTitle>
+              <DialogDescription>
+                Please provide your birth details for personalized astrological recommendations.
+              </DialogDescription>
+            </div>
+            {/* Close button */}
+            <button
+              aria-label="Close"
+              className="ml-4 rounded p-1 text-foreground hover:bg-muted"
+              onClick={() => {
+                setOpen(false);
+                // record dismissal timestamp so modal can reappear later
+                if (user) localStorage.setItem(dismissalKey, String(Date.now()));
+              }}
+            >
+              {/* <X className="h-5 w-5" /> */}
+            </button>
+          </div>
         </DialogHeader>
         <div className="space-y-4">
           {/* DOB */}

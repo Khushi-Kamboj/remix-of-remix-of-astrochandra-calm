@@ -1,6 +1,6 @@
 import { Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.webp";
 
 const Footer = () => (
   <footer className="border-t bg-card">

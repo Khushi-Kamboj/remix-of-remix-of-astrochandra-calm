@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import RequireAuth from "@/components/RequireAuth";
 import FirstLoginModal from "@/components/FirstLoginModal";
 import Index from "./pages/Index";
 import Astrologers from "./pages/Astrologers";
@@ -38,16 +38,16 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/astrologers" element={<Astrologers />} />
-                <Route path="/book" element={<ProtectedRoute><BookConsultation /></ProtectedRoute>} />
-                <Route path="/pooja" element={<ProtectedRoute><PoojaServices /></ProtectedRoute>} />
+                <Route path="/book" element={<RequireAuth><BookConsultation /></RequireAuth>} />
+                <Route path="/pooja" element={<RequireAuth><PoojaServices /></RequireAuth>} />
                 <Route path="/training" element={<TrainingWorkshops />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
-                <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
-                <Route path="/astrologer-dashboard" element={<ProtectedRoute allowedRoles={["astrologer", "admin"]}><AstrologerDashboard /></ProtectedRoute>} />
-                <Route path="/priest-dashboard" element={<ProtectedRoute allowedRoles={["priest", "admin"]}><PriestDashboard /></ProtectedRoute>} />
-                <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
+                <Route path="/dashboard" element={<RequireAuth><UserDashboard /></RequireAuth>} />
+                <Route path="/astrologer-dashboard" element={<RequireAuth requireRole={["astrologer", "admin"]}><AstrologerDashboard /></RequireAuth>} />
+                <Route path="/priest-dashboard" element={<RequireAuth requireRole={["priest", "admin"]}><PriestDashboard /></RequireAuth>} />
+                <Route path="/admin" element={<RequireAuth requireRole="admin"><AdminDashboard /></RequireAuth>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

@@ -1,7 +1,7 @@
-import aisha from "@/assets/aisha.png";
-import daniel from "@/assets/daniel.png";
-import rahul from "@/assets/rahul.png";
-import sophia from "@/assets/sophia.png";
+import aisha from "@/assets/aisha.webp";
+import daniel from "@/assets/daniel.webp";
+import rahul from "@/assets/rahul.webp";
+import sophia from "@/assets/sophia.webp";
 
 export interface Testimonial {
   id: number;

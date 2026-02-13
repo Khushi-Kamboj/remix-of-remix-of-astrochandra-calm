@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -50,7 +50,7 @@ const AstrologerDashboard = () => {
     }
   }, [profile]);
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     if (!user) return;
     setBookingsLoading(true);
     const { data, error } = await supabase
@@ -60,7 +60,7 @@ const AstrologerDashboard = () => {
       .order("created_at", { ascending: false });
     if (!error && data) setBookings(data as Booking[]);
     setBookingsLoading(false);
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchBookings();
@@ -74,7 +74,7 @@ const AstrologerDashboard = () => {
       .subscribe();
 
     return () => { channel.unsubscribe(); };
-  }, [user]);
+  }, [user, fetchBookings]);
 
   const handleSave = async () => {
     if (!user) return;

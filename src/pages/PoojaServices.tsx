@@ -1,7 +1,7 @@
 import { Star, Clock, Globe, Calendar } from "lucide-react";
 import { priests } from "@/data/priests";
 import BookingForm from "@/components/BookingForm";
-import pooja from "@/assets/pooja.jpeg";
+import pooja from "@/assets/pooja.webp";
 import { motion } from "framer-motion";
 
 const fadeUp = {

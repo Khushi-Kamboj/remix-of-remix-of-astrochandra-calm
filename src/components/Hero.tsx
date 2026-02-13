@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import heroBg from "@/assets/bg_astrochandra.png";
-import heroBgMobile from "@/assets/bg_astrochandra_mobile.png";
+import heroBg from "@/assets/bg_astrochandra.webp?url";
+import heroBgMobile from "@/assets/bg_astrochandra_mobile.webp?url";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },

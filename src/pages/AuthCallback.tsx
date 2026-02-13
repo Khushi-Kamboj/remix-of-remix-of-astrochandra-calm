@@ -1,57 +1,68 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import type { Database } from "@/integrations/supabase/types";
 
+type AppRole = Database["public"]["Enums"]["app_role"];
+
+/**
+ * AuthCallback Page
+ * 
+ * Handles OAuth/email callback by:
+ * 1. Waiting for session to be established
+ * 2. Loading user role from database
+ * 3. Redirecting to appropriate dashboard based on role
+ */
 const AuthCallback = () => {
   const navigate = useNavigate();
-  const { role } = useAuth();
+  const { user, role, loading, error } = useAuth();
+
+  // Map roles to their dashboard routes (memoized to avoid dependency issues)
+  const roleToRoute = useMemo(() => ({
+    admin: "/admin" as const,
+    astrologer: "/astrologer-dashboard" as const,
+    priest: "/priest-dashboard" as const,
+    user: "/dashboard" as const,
+  }), []);
 
   useEffect(() => {
-    const handleCallback = async () => {
-      try {
-        // The session is automatically set by Supabase when the callback URL is accessed
-        const { data: { session } } = await supabase.auth.getSession();
+    // Still loading auth and role information
+    if (loading) return;
 
-        if (session) {
-          // User is logged in
-          if (role) {
-            // Redirect based on role
-            switch (role) {
-              case "admin":
-                navigate("/admin", { replace: true });
-                break;
-              case "astrologer":
-                navigate("/astrologer-dashboard", { replace: true });
-                break;
-              case "priest":
-                navigate("/priest-dashboard", { replace: true });
-                break;
-              default:
-                navigate("/dashboard", { replace: true });
-            }
-          } else {
-            // Default redirect if role is not yet available
-            navigate("/dashboard", { replace: true });
-          }
-        } else {
-          // No session, redirect to login
-          navigate("/login", { replace: true });
-        }
-      } catch (error) {
-        console.error("Auth callback error:", error);
-        navigate("/login", { replace: true });
-      }
-    };
+    // Error occurred during auth initialization
+    if (error) {
+      console.error("Auth callback error:", error);
+      navigate("/login", { replace: true });
+      return;
+    }
 
-    handleCallback();
-  }, [role, navigate]);
+    // User has complete session and role information
+    if (user && role) {
+      const path = roleToRoute[role];
+      navigate(path, { replace: true });
+      return;
+    }
+
+    // User authenticated but role not loaded, fallback to user dashboard
+    if (user && !role) {
+      navigate("/dashboard", { replace: true });
+      return;
+    }
+
+    // No user session, redirect to login
+    navigate("/login", { replace: true });
+  }, [user, role, loading, error, navigate, roleToRoute]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Completing sign-in...</h1>
-        <p className="text-muted-foreground">Please wait while we complete your authentication.</p>
+    <div className="flex items-center justify-center min-h-screen bg-background">
+      <div className="text-center space-y-4">
+        <div className="flex justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold mb-2">Completing sign-in...</h1>
+          <p className="text-muted-foreground text-sm">Please wait while we set up your account.</p>
+        </div>
       </div>
     </div>
   );

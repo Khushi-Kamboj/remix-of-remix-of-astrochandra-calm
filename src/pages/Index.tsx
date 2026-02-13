@@ -1,13 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Star, Search, Calendar, BookOpen, Sparkles, GraduationCap } from "lucide-react";
-import AstrologerCard from "@/components/AstrologerCard";
-import { astrologers } from "@/data/astrologers";
 import { motion } from "framer-motion";
 import AboutSection from "@/components/AboutSection";
 import Hero from "@/components/Hero"
-import heroBg from "@/assets/bg_astrochandra.png";
-import poojaImg from "@/assets/pooja.jpeg";
 import Astrologers from "./Astrologers";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import { testimonials } from "@/data/testimonials";

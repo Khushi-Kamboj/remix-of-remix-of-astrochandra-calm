@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +19,8 @@ const Signup = () => {
   const { toast } = useToast();
 
   const getRedirectPath = () => {
-    const from = (location.state as any)?.from?.pathname || null;
+    const state = location.state as { from?: { pathname: string } } | null;
+    const from = state?.from?.pathname || null;
     return (from === "/book" || from === "/pooja") ? from : "/dashboard";
   };
 
@@ -32,26 +32,39 @@ const Signup = () => {
       password,
       options: {
         data: { full_name: fullName },
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: window.location.origin + "/auth/callback",
       },
     });
     setLoading(false);
     if (error) {
       toast({ title: "Signup failed", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Check your email", description: "We've sent a verification link to your email." });
-      navigate(getRedirectPath(), { replace: true });
+      toast({ 
+        title: "Check your email", 
+        description: "We've sent a verification link to your email. Please confirm to complete signup." 
+      });
+      // Don't navigate - email confirmation flow will handle authentication
     }
   };
 
   const handleGoogleSignup = async () => {
     setGoogleLoading(true);
-    const { error } = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/auth/callback",
+      },
     });
+
     setGoogleLoading(false);
+
     if (error) {
-      toast({ title: "Google signup failed", description: error.message, variant: "destructive" });
+      toast({
+        title: "Google signup failed",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
