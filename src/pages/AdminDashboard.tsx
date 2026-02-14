@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { canViewConsultationDetails } from "@/integrations/supabase/bookingHelpers";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -32,6 +34,8 @@ interface Booking {
   created_at: string;
   assigned_to: string | null;
   user_id: string;
+  description: string | null;
+  ai_summary: string | null;
 }
 
 interface Professional {
@@ -41,6 +45,7 @@ interface Professional {
 }
 
 const AdminDashboard = () => {
+  const { user: currentUser, role: currentRole } = useAuth();
   const [users, setUsers] = useState<UserWithRole[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
@@ -196,11 +201,26 @@ const AdminDashboard = () => {
                         <TableHead>Slot</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Assigned To</TableHead>
+                        <TableHead>AI Summary</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {bookings.map((b) => (
+                      {bookings.map((b) => {
+                        // Test/debug: CASE 3 — Admin sees user details, problem description, AI summary, assigned astrologer
+                        if (b.service_type === "consultation" && currentUser && currentRole) {
+                          const canView = canViewConsultationDetails(b, { id: currentUser.id, role: currentRole });
+                          console.log("[Admin booking row]", {
+                            "booking.id": b.id,
+                            "booking.status": b.status,
+                            "booking.astrologer_id": b.assigned_to,
+                            "loggedInUser.id": currentUser.id,
+                            "booking.ai_summary": b.ai_summary ? `${b.ai_summary.slice(0, 50)}...` : null
+                          });
+                          if (canView) console.log("ADMIN VIEW — user details, problem description, AI summary, assigned astrologer", b.id);
+                        }
+
+                        return (
                         <TableRow key={b.id}>
                           <TableCell className="font-medium">{b.name}</TableCell>
                           <TableCell>
@@ -214,26 +234,51 @@ const AdminDashboard = () => {
                             <Badge className={statusBadgeColor(b.status)}>{b.status}</Badge>
                           </TableCell>
                           <TableCell className="text-sm">{getAssigneeName(b.assigned_to)}</TableCell>
+                          <TableCell className="text-sm max-w-[200px] truncate" title={b.ai_summary ?? undefined}>
+                            {b.ai_summary ?? "—"}
+                          </TableCell>
                           <TableCell>
-                            {!b.assigned_to || b.status === "pending" ? (
-                              <Select onValueChange={(v) => handleAssign(b.id, v)}>
-                                <SelectTrigger className="w-[160px]">
-                                  <SelectValue placeholder="Assign to..." />
+                            <div className="flex flex-wrap items-center gap-2">
+                              {(!b.assigned_to || b.status === "pending") && (
+                                <Select onValueChange={(v) => handleAssign(b.id, v)}>
+                                  <SelectTrigger className="w-[140px]">
+                                    <SelectValue placeholder="Assign..." />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {getEligibleProfessionals(b.service_type).map((p) => (
+                                      <SelectItem key={p.id} value={p.id}>
+                                        {p.full_name || "Unnamed"} ({p.role})
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                              <Select
+                                value={b.status}
+                                onValueChange={async (v) => {
+                                  const { error } = await supabase.from("bookings").update({ status: v }).eq("id", b.id);
+                                  if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
+                                  else { toast({ title: "Status updated" }); fetchBookings(); }
+                                }}
+                              >
+                                <SelectTrigger className="w-[120px]">
+                                  <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {getEligibleProfessionals(b.service_type).map((p) => (
-                                    <SelectItem key={p.id} value={p.id}>
-                                      {p.full_name || "Unnamed"} ({p.role})
-                                    </SelectItem>
-                                  ))}
+                                  <SelectItem value="pending">Pending</SelectItem>
+                                  <SelectItem value="confirmed">Confirmed</SelectItem>
+                                  <SelectItem value="assigned">Assigned</SelectItem>
+                                  <SelectItem value="accepted">Accepted</SelectItem>
+                                  <SelectItem value="completed">Completed</SelectItem>
+                                  <SelectItem value="rejected">Rejected</SelectItem>
+                                  <SelectItem value="cancelled">Cancelled</SelectItem>
                                 </SelectContent>
                               </Select>
-                            ) : (
-                              <span className="text-sm text-muted-foreground">—</span>
-                            )}
+                            </div>
                           </TableCell>
                         </TableRow>
-                      ))}
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </div>

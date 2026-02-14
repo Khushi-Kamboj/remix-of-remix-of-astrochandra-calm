@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       bookings: {
         Row: {
+          ai_summary: string | null
           assigned_to: string | null
           birth_state: string | null
           birth_time: string | null
@@ -38,6 +39,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ai_summary?: string | null
           assigned_to?: string | null
           birth_state?: string | null
           birth_time?: string | null
@@ -60,6 +62,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          ai_summary?: string | null
           assigned_to?: string | null
           birth_state?: string | null
           birth_time?: string | null

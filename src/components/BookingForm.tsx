@@ -75,8 +75,6 @@ const bookingSchema = z
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
 
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbz1xNriYP3vXeO-Yy0tuhjE51ejbDFrXjIBADUKqrn03P4TF28glwnYmWbG1N1YYZva/exec";
-
 interface BookingFormProps {
   serviceType: ServiceType;
 }
@@ -171,64 +169,29 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
     setLoading(true);
 
     const birthTime = `${data.birthHour}:${data.birthMinute} ${data.birthAmpm}`;
-    const payload = {
-      timestamp: new Date().toISOString(),
-      serviceType,
-      name: data.name,
-      email: data.email || "",
-      phone: data.phone,
-      problemCategory: data.problemCategory,
-      dependentCategory: isOther ? (data.otherCategory || "") : (data.dependentCategory || ""),
-      dob: format(data.dob, "yyyy-MM-dd"),
-      birthTime,
-      birthState: data.birthState,
-      preferredSlot: data.preferredSlot,
-      description: data.description || "",
-      poojaType: data.poojaType || "",
-    };
-
-    console.log("Submitting payload:", payload);
 
     try {
-      if (GOOGLE_SHEETS_URL) {
-        // Using no-cors mode because Google Apps Script redirects
-        // don't include CORS headers. The response will be opaque,
-        // but the data still reaches the script.
-        await fetch(GOOGLE_SHEETS_URL, {
-          method: "POST",
-          // mode: "no-cors",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload),
-        });
+      const { error: dbError } = await supabase.from("bookings").insert({
+        user_id: user?.id ?? null,
+        family_profile_id: user && selectedProfileId !== "self" ? selectedProfileId : null,
+        service_type: serviceType,
+        status: "pending",
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        problem_category: data.problemCategory,
+        dependent_category: isOther ? (data.otherCategory || null) : (data.dependentCategory || null),
+        other_category: isOther ? (data.otherCategory || null) : null,
+        dob: format(data.dob, "yyyy-MM-dd"),
+        birth_time: birthTime,
+        birth_state: data.birthState,
+        preferred_slot: data.preferredSlot,
+        description: data.description || null,
+        pooja_type: data.poojaType || null,
+      });
 
-        console.log("Payload sent successfully (no-cors mode, response is opaque)");
-      } else {
-        await new Promise((r) => setTimeout(r, 1200));
-        console.log("Form data (no Google Sheets URL configured):", payload);
-      }
-
-      // Save to Supabase if user is logged in
-      if (user) {
-        const { error: dbError } = await supabase.from("bookings").insert({
-          user_id: user.id,
-          family_profile_id: selectedProfileId !== "self" ? selectedProfileId : null,
-          service_type: serviceType,
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          problem_category: data.problemCategory,
-          dependent_category: isOther ? (data.otherCategory || null) : (data.dependentCategory || null),
-          other_category: isOther ? (data.otherCategory || null) : null,
-          dob: format(data.dob, "yyyy-MM-dd"),
-          birth_time: birthTime,
-          birth_state: data.birthState,
-          preferred_slot: data.preferredSlot,
-          description: data.description || null,
-          pooja_type: data.poojaType || null,
-        });
-        if (dbError) {
-          console.error("Supabase insert error:", dbError);
-        }
+      if (dbError) {
+        throw dbError;
       }
 
       setSubmitted(true);
@@ -236,7 +199,7 @@ const BookingForm = ({ serviceType }: BookingFormProps) => {
       toast.success("Your booking request has been received.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
-      console.error("Fetch error:", message, error);
+      console.error("Supabase insert error:", message, error);
       toast.error(`Something went wrong: ${message}`);
     } finally {
       setLoading(false);
