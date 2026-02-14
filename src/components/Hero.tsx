@@ -12,93 +12,91 @@ const fadeUp = {
 };
 
 const Hero = () => {
-  const { user, role } = useAuth();
+  const { role } = useAuth();
   const canBookServices = role === "user";
 
   return (
-    <section className="relative h-[100vh] md:min-h-screen overflow-hidden">
-  {/* Desktop Background */}
-  <div
-    className="absolute inset-0 bg-cover bg-center hidden md:block"
-    style={{ backgroundImage: `url(${heroBg})` }}
-  />
+    <section className="relative h-screen overflow-hidden">
 
-  {/* Mobile Background */}
-  <div
-    className="absolute inset-0 bg-cover bg-center md:hidden"
-    style={{ backgroundImage: `url(${heroBgMobile})` }}
-  />
+      {/* Desktop Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center hidden md:block"
+        style={{ backgroundImage: `url(${heroBg})` }}
+      />
 
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent md:bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+      {/* Mobile Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center md:hidden"
+        style={{ backgroundImage: `url(${heroBgMobile})` }}
+      />
 
-  {/* Content */}
-  <div className="relative container h-full flex flex-col justify-between md:justify-center text-center">
-    
-    {/* Badge (mobile top) */}
-    <div className="md:hidden pt-6">
-      <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-[11px] text-[#E6D08A] tracking-wide font-medium">
-        <Sparkles className="h-3.5 w-3.5 text-[#D4AF37]" />
-        Trusted Astrology Guidance Platform
-      </div>
-    </div>
+      {/* Overlay (stronger bottom fade for mobile text readability) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent md:bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
 
-    {/* TEXT BLOCK — pushed to bottom on mobile */}
-    <motion.div
-      className="max-w-xs sm:max-w-sm md:max-w-2xl mx-auto pb-14 md:pb-0"
-      initial="hidden"
-      animate="visible"
-      variants={fadeUp}
-      transition={{ duration: 0.7 }}
-    >
-      {/* Desktop badge */}
-      <div className="hidden md:inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-xs text-[#E6D08A] mb-6 tracking-wide font-medium">
-        <Sparkles className="h-4 w-4 text-[#D4AF37]" />
-        Trusted Astrology Guidance Platform
-      </div>
+      {/* Content container */}
+      <div className="relative container h-full flex flex-col justify-between md:justify-center text-center">
 
-      {/* Heading */}
-      <h1 className="font-heading text-xl sm:text-2xl md:text-5xl lg:text-6xl leading-snug md:leading-tight mb-4">
-        <span className="text-white/85 block font-light">
-          Clarity when life feels uncertain.
-        </span>
-
-        <span className="text-[#D4AF37] font-bold block">
-          Guidance when decisions matter.
-        </span>
-      </h1>
-
-      {/* Subtitle */}
-      <p className="text-white/70 text-sm md:text-lg mb-6 max-w-md mx-auto">
-        Real astrologers. Real conversations. Real direction.
-      </p>
-
-      {canBookServices && (
-        <div className="flex flex-row gap-3 justify-center">
-          <Link to="/book">
-            <Button
-              size="sm"
-              className="px-5 py-2 text-sm text-white rounded-lg shadow-lg"
-              style={{ background: "#EC2227" }}
-            >
-              Book Consultation
-            </Button>
-          </Link>
-
-          <Link to="/pooja">
-            <Button
-              size="sm"
-              className="px-5 py-2 text-sm rounded-lg border border-[#D4AF37] text-[#D4AF37] bg-black/30 transition-all duration-300 hover:bg-[#D4AF37] hover:text-black"
-            >
-              Book Pooja
-            </Button>
-          </Link>
+        {/* Mobile badge at top */}
+        <div className="md:hidden pt-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-[11px] text-[#E6D08A] tracking-wide font-medium">
+            <Sparkles className="h-3.5 w-3.5 text-[#D4AF37]" />
+            Trusted Astrology Guidance Platform
+          </div>
         </div>
-      )}
-    </motion.div>
-  </div>
-</section>
 
+        {/* Bottom content (mobile) / centered (desktop) */}
+        <motion.div
+          className="max-w-xs sm:max-w-sm md:max-w-2xl mx-auto pb-12 md:pb-0"
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.7 }}
+        >
+          {/* Desktop badge */}
+          <div className="hidden md:inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-xs text-[#E6D08A] mb-6 tracking-wide font-medium">
+            <Sparkles className="h-4 w-4 text-[#D4AF37]" />
+            Trusted Astrology Guidance Platform
+          </div>
+
+          <h1 className="font-heading text-xl sm:text-2xl md:text-5xl lg:text-6xl leading-snug md:leading-tight mb-4">
+            <span className="text-white/85 block font-light">
+              Clarity when life feels uncertain.
+            </span>
+
+            <span className="text-[#D4AF37] font-bold block">
+              Guidance when decisions matter.
+            </span>
+          </h1>
+
+          <p className="text-white/70 text-sm md:text-lg mb-6 max-w-md mx-auto">
+            Real astrologers. Real conversations. Real direction.
+          </p>
+
+          {canBookServices && (
+            <div className="flex flex-row gap-3 justify-center">
+              <Link to="/book">
+                <Button
+                  size="sm"
+                  className="px-5 py-2 text-sm text-white rounded-lg shadow-lg"
+                  style={{ background: "#EC2227" }}
+                >
+                  Book Consultation
+                </Button>
+              </Link>
+
+              <Link to="/pooja">
+                <Button
+                  size="sm"
+                  className="px-5 py-2 text-sm rounded-lg border border-[#D4AF37] text-[#D4AF37] bg-black/30 transition-all duration-300 hover:bg-[#D4AF37] hover:text-black"
+                >
+                  Book Pooja
+                </Button>
+              </Link>
+            </div>
+          )}
+        </motion.div>
+      </div>
+    </section>
   );
 };
 
