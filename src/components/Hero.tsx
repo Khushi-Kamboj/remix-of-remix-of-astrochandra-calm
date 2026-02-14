@@ -17,99 +17,88 @@ const Hero = () => {
 
   return (
     <section className="relative h-[100vh] md:min-h-screen overflow-hidden">
-      
-      {/* Desktop Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center hidden md:block"
-        style={{ backgroundImage: `url(${heroBg})` }}
-      />
+  {/* Desktop Background */}
+  <div
+    className="absolute inset-0 bg-cover bg-center hidden md:block"
+    style={{ backgroundImage: `url(${heroBg})` }}
+  />
 
-      {/* Mobile Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center md:hidden"
-        style={{ backgroundImage: `url(${heroBgMobile})` }}
-      />
+  {/* Mobile Background */}
+  <div
+    className="absolute inset-0 bg-cover bg-center md:hidden"
+    style={{ backgroundImage: `url(${heroBgMobile})` }}
+  />
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent md:bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
 
-      {/* Content */}
-        <div className="relative container h-full flex flex-col justify-between md:justify-center py-8 md:py-0 text-center">
+  {/* Content */}
+  <div className="relative container h-full flex flex-col justify-between md:justify-center text-center">
+    
+    {/* Badge (mobile top) */}
+    <div className="md:hidden pt-6">
+      <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-[11px] text-[#E6D08A] tracking-wide font-medium">
+        <Sparkles className="h-3.5 w-3.5 text-[#D4AF37]" />
+        Trusted Astrology Guidance Platform
+      </div>
+    </div>
 
-        {/* Badge — moves to top on mobile */}
-        <div className="md:hidden pt-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-[11px] text-[#E6D08A] tracking-wide font-medium">
-            <Sparkles className="h-3.5 w-3.5 text-[#D4AF37]" />
-            Trusted Astrology Guidance Platform
-        </div>
-        </div>
+    {/* TEXT BLOCK — pushed to bottom on mobile */}
+    <motion.div
+      className="max-w-xs sm:max-w-sm md:max-w-2xl mx-auto pb-14 md:pb-0"
+      initial="hidden"
+      animate="visible"
+      variants={fadeUp}
+      transition={{ duration: 0.7 }}
+    >
+      {/* Desktop badge */}
+      <div className="hidden md:inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-xs text-[#E6D08A] mb-6 tracking-wide font-medium">
+        <Sparkles className="h-4 w-4 text-[#D4AF37]" />
+        Trusted Astrology Guidance Platform
+      </div>
 
-        <motion.div
-        className="max-w-xs sm:max-w-sm md:max-w-2xl mx-auto"
-        initial="hidden"
-        animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.7 }}
-        >
-        {/* Badge for desktop */}
-        <div className="hidden md:inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-black/30 px-4 py-1.5 text-xs text-[#E6D08A] mb-6 tracking-wide font-medium">
-            <Sparkles className="h-4 w-4 text-[#D4AF37]" />
-            Trusted Astrology Guidance Platform
-        </div>
+      {/* Heading */}
+      <h1 className="font-heading text-xl sm:text-2xl md:text-5xl lg:text-6xl leading-snug md:leading-tight mb-4">
+        <span className="text-white/85 block font-light">
+          Clarity when life feels uncertain.
+        </span>
 
-        {/* Heading */}
-        <h1 className="font-heading text-xl sm:text-2xl md:text-5xl lg:text-6xl leading-snug md:leading-tight mb-4">
-            <span className="text-white/85 block font-light">
-            Clarity when life feels uncertain.
-            </span>
+        <span className="text-[#D4AF37] font-bold block">
+          Guidance when decisions matter.
+        </span>
+      </h1>
 
-            <span className="text-[#D4AF37] font-bold block">
-            Guidance when decisions matter.
-            </span>
-        </h1>
+      {/* Subtitle */}
+      <p className="text-white/70 text-sm md:text-lg mb-6 max-w-md mx-auto">
+        Real astrologers. Real conversations. Real direction.
+      </p>
 
-        {/* Subtitle */}
-        <p className="text-white/70 text-sm md:text-lg mb-6 max-w-md mx-auto">
-            Real astrologers. Real conversations. Real direction.
-        </p>
-
-        {/* Buttons — only visible for user role */}
-        {canBookServices && (
+      {canBookServices && (
         <div className="flex flex-row gap-3 justify-center">
-            <Link to="/book">
+          <Link to="/book">
             <Button
-                size="sm"
-                className="px-5 py-2 text-sm text-white rounded-lg shadow-lg"
-                style={{ background: "#EC2227" }}
+              size="sm"
+              className="px-5 py-2 text-sm text-white rounded-lg shadow-lg"
+              style={{ background: "#EC2227" }}
             >
-                Book Consultation
+              Book Consultation
             </Button>
-            </Link>
+          </Link>
 
-        <Link to="/pooja">
+          <Link to="/pooja">
             <Button
-                size="sm"
-                className="
-                    px-5 py-2 text-sm rounded-lg
-                    border border-[#D4AF37]
-                    text-[#D4AF37]
-                    bg-black/30
-                    transition-all duration-300
-                    hover:bg-[#D4AF37]
-                    hover:text-black
-                    hover:shadow-[0_0_15px_rgba(212,175,55,0.6)]
-                "
-                >
-                Book Pooja
-                </Button>
-            </Link>
+              size="sm"
+              className="px-5 py-2 text-sm rounded-lg border border-[#D4AF37] text-[#D4AF37] bg-black/30 transition-all duration-300 hover:bg-[#D4AF37] hover:text-black"
+            >
+              Book Pooja
+            </Button>
+          </Link>
         </div>
-        )}
-        </motion.div>
+      )}
+    </motion.div>
+  </div>
+</section>
 
-        </div>
-        
-    </section>
   );
 };
 
