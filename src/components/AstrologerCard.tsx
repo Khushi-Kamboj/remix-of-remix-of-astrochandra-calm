@@ -1,6 +1,7 @@
 import { Star, Clock, Globe, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AstrologerCardProps {
   name: string;
@@ -18,7 +19,11 @@ const AstrologerCard = ({
   languages,
   availability,
   imageUrl,
-}: AstrologerCardProps) => (
+}: AstrologerCardProps) => {
+  const { role } = useAuth();
+  const canBookServices = role === "user";
+
+  return (
   <div className="group rounded-xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
     {imageUrl ? (
       <div className="mb-4 mx-auto h-24 w-24 rounded-full overflow-hidden bg-muted">
@@ -52,10 +57,13 @@ const AstrologerCard = ({
         {availability}
       </p>
     </div>
-    <Link to="/book" className="block mt-4">
-      <Button className="w-full" size="sm">Book Consultation</Button>
-    </Link>
+    {canBookServices && (
+      <Link to="/book" className="block mt-4">
+        <Button className="w-full" size="sm">Book Consultation</Button>
+      </Link>
+    )}
   </div>
-);
+  );
+};
 
 export default AstrologerCard;

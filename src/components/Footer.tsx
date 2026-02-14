@@ -1,8 +1,13 @@
 import { Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.webp";
+import { useAuth } from "@/hooks/useAuth";
 
-const Footer = () => (
+const Footer = () => {
+  const { user, role } = useAuth();
+  const canBookServices = role === "user";
+
+  return (
   <footer className="border-t bg-card">
     <div className="container py-12">
       <div className="grid gap-8 md:grid-cols-3">
@@ -23,9 +28,15 @@ const Footer = () => (
           <h4 className="font-heading font-semibold mb-3">Quick Links</h4>
           <div className="flex flex-col gap-2 text-sm text-muted-foreground">
             <Link to="/" className="hover:text-primary transition-colors">Home</Link>
-            <Link to="/astrologers" className="hover:text-primary transition-colors">Astrologers</Link>
-            <Link to="/book" className="hover:text-primary transition-colors">Book Consultation</Link>
-            <Link to="/pooja" className="hover:text-primary transition-colors">Pooja Services</Link>
+            {role !== "priest" && (
+              <Link to="/astrologers" className="hover:text-primary transition-colors">Astrologers</Link>
+            )}
+            {(!user || canBookServices) && (
+              <>
+                <Link to="/book" className="hover:text-primary transition-colors">Book Consultation</Link>
+                <Link to="/pooja" className="hover:text-primary transition-colors">Pooja Services</Link>
+              </>
+            )}
             <Link to= "/training" className="hover:text-primary transition-colors">Training & Workshops</Link>
           </div>
         </div>
@@ -54,6 +65,7 @@ const Footer = () => (
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 export default Footer;

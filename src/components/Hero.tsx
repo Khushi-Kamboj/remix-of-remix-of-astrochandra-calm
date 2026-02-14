@@ -4,6 +4,7 @@ import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import heroBg from "@/assets/bg_astrochandra.webp?url";
 import heroBgMobile from "@/assets/bg_astrochandra_mobile.webp?url";
+import { useAuth } from "@/hooks/useAuth";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -11,6 +12,9 @@ const fadeUp = {
 };
 
 const Hero = () => {
+  const { user, role } = useAuth();
+  const canBookServices = role === "user";
+
   return (
     <section className="relative h-[100vh] md:min-h-screen overflow-hidden">
       
@@ -69,7 +73,8 @@ const Hero = () => {
             Real astrologers. Real conversations. Real direction.
         </p>
 
-        {/* Buttons — one row on mobile */}
+        {/* Buttons — only visible for user role */}
+        {canBookServices && (
         <div className="flex flex-row gap-3 justify-center">
             <Link to="/book">
             <Button
@@ -99,6 +104,7 @@ const Hero = () => {
                 </Button>
             </Link>
         </div>
+        )}
         </motion.div>
 
         </div>

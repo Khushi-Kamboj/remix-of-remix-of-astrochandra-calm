@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import logo from "@/assets/logo.webp";
 
-const navLinks = [
+const allNavLinks = [
   { label: "Home", path: "/" },
   { label: "Astrologers", path: "/astrologers" },
   { label: "Book Consultation", path: "/book" },
@@ -18,6 +18,9 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, role, signOut } = useAuth();
+
+  const canBookServices = role === "user";
+  const canManageBookings = role !== "user";
 
   const getDashboardPath = () => {
     switch (role) {
@@ -42,7 +45,12 @@ const Navbar = () => {
 
         {/* Desktop */}
         <div className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => {
+          {allNavLinks.filter((link) => {
+            const isBookingLink = link.path === "/book" || link.path === "/pooja";
+            const hideBookingLinks = isBookingLink && user && !canBookServices;
+            const hideAstrologersForPriest = link.path === "/astrologers" && role === "priest";
+            return !hideBookingLinks && !hideAstrologersForPriest;
+          }).map((link) => {
             const isActive = location.pathname === link.path;
             return (
               <Link
@@ -64,6 +72,15 @@ const Navbar = () => {
                   Dashboard
                 </Button>
               </Link>
+              {canManageBookings ? (
+                <Link to="/bookings">
+                  <Button size="sm" variant="outline">Bookings</Button>
+                </Link>
+              ) : (
+                <Link to="/bookings">
+                  <Button size="sm" variant="outline">My Bookings</Button>
+                </Link>
+              )}
               <Button size="sm" variant="ghost" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4" />
               </Button>
@@ -89,7 +106,12 @@ const Navbar = () => {
       {/* Mobile menu */}
       {open && (
         <div className="border-t bg-card px-4 pb-4 pt-2 md:hidden">
-          {navLinks.map((link) => {
+          {allNavLinks.filter((link) => {
+            const isBookingLink = link.path === "/book" || link.path === "/pooja";
+            const hideBookingLinks = isBookingLink && user && !canBookServices;
+            const hideAstrologersForPriest = link.path === "/astrologers" && role === "priest";
+            return !hideBookingLinks && !hideAstrologersForPriest;
+          }).map((link) => {
             const isActive = location.pathname === link.path;
             return (
               <Link
@@ -108,6 +130,11 @@ const Navbar = () => {
             <>
               <Link to={getDashboardPath()} onClick={() => setOpen(false)}>
                 <Button className="mt-2 w-full" variant="outline">Dashboard</Button>
+              </Link>
+              <Link to="/bookings" onClick={() => setOpen(false)}>
+                <Button className="mt-2 w-full" variant="outline">
+                  {canManageBookings ? "Bookings" : "My Bookings"}
+                </Button>
               </Link>
               <Button className="mt-2 w-full" variant="ghost" onClick={() => { handleSignOut(); setOpen(false); }}>
                 Sign Out
