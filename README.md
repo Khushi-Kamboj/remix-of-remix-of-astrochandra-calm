@@ -1,73 +1,106 @@
-# Welcome to your Lovable project
+## AstroChandra — Features
 
-## Project info
+AstroChandra is a role-based astrology consultation and pooja booking platform designed to connect users with astrologers and priests through a structured dashboard and booking system.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+### Public Website
+- Home page
+- Astrologer listing page
+- Priests & Pooja services page
+- Testimonials section
+- Reviews section
+- Admin-managed images and videos
+- Training & workshops page (coming soon)
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+### Authentication & Roles
+AstroChandra uses role-based authentication with four user types:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- User
+- Astrologer
+- Priest
+- Admin
 
-Changes made via Lovable will be committed automatically to this repo.
+Features:
+- Secure login/signup
+- Role-based dashboard access
+- Role-based UI rendering
+- Profile completion after login
+- Personalized user experience
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### User Features
+Users can:
+- Complete profile information
+- View astrologers
+- View pooja services
+- Book consultation services
+- Book pooja services
+- Access user dashboard
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Users cannot:
+- Manage bookings
+- Update booking status
+- Access admin controls
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Astrologer Features
+Astrologers can:
+- View astrologer profile
+- View assigned consultation bookings
+- Update consultation booking status
+- Manage consultation workflow from dashboard
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Priest Features
+Priests can:
+- View priest profile
+- View pooja bookings
+- Update pooja booking status
+- Manage pooja booking workflow
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+### Admin Features
+Admin panel includes:
+- Astrologer profile verification
+- Priest profile verification
+- Manage astrologers and priests
+- Manage consultation bookings
+- Manage pooja bookings
+- Manage testimonials
+- Manage reviews
+- Manage images and videos
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+### Booking System
+AstroChandra includes a complete booking workflow:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Consultation booking system
+- Pooja booking system
+- Role-based booking management
+- Dashboard-based booking visibility
+- Booking status updates by astrologers, priests, and admin
 
-## What technologies are used for this project?
+Booking status types:
+- pending
+- confirmed
+- completed
+- cancelled
+- rejected
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Dashboard System
+Role-based dashboards:
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- User dashboard for booking services and profile management
+- Astrologer dashboard for consultation management
+- Priest dashboard for pooja booking management
+- Admin dashboard for full platform control
