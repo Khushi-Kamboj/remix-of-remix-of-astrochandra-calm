@@ -21,6 +21,7 @@ import AstrologerDashboard from "./pages/AstrologerDashboard";
 import PriestDashboard from "./pages/PriestDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
+import BookingsPage from "@/pages/BookingsPage";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
                 <Route path="/astrologer-dashboard" element={<RequireAuth requireRole={["astrologer", "admin"]}><AstrologerDashboard /></RequireAuth>} />
                 <Route path="/priest-dashboard" element={<RequireAuth requireRole={["priest", "admin"]}><PriestDashboard /></RequireAuth>} />
                 <Route path="/admin" element={<RequireAuth requireRole="admin"><AdminDashboard /></RequireAuth>} />
+                <Route path="/bookings" element={<RequireAuth><BookingsPage /></RequireAuth>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
